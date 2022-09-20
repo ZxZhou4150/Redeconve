@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Redeconve manual</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Redeconve manual</h1>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#library(Redeconve)</span></span></code></pre></div>
+<hr />
+<div id="main-function" class="section level2">
+<h2>Main function</h2>
+<p>This part describes how to use the main function
+<code>deconvoluting</code> to perform single-cell deconvolution.</p>
+<div id="useage" class="section level3">
+<h3>Useage</h3>
+<p>The usage of <code>deconvoluting</code> is as follows:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># nums = deconvoluting(ref, st, cell.names=NULL, genemode, gene.list, var_thresh=0.025, exp_thresh=0.03, hpmode, hp, thre=1e-10, dopar=T, ncores, realtime=F, dir=NULL)</span></span></code></pre></div>
+<p>It does contains many parameters. Next, I will divide these
+parameters into several parts by function, and explain them one by
+one.</p>
+</div>
+<div id="necessary-data-for-deconvolution" class="section level3">
+<h3>1. Necessary data for deconvolution</h3>
+<p><code>ref</code> and <code>st</code> are the core data used for
+deconvolution. They are required as follows:</p>
+<ul>
+<li><code>ref</code>, the scRNA-seq data served as reference for
+deconvolution. It is a <code>Matrix</code> (or <code>dgCMatrix</code>)
+of unprocessed count-level scRNA-seq data. One row represents one gene
+and one column represents one cell.</li>
+<li><code>st</code>, the spatial transcriptomics to be deconvoluted. It
+is a <code>Matrix</code> (or <code>dgCMatrix</code>) of unprocessed
+spatial transcriptomics, represents raw counts in each spot. One row
+represents one gene and one column represents one spot.</li>
+</ul>
+</div>
+<div id="mode-of-gene-selection" class="section level3">
+<h3>2. Mode of gene selection</h3>
+<p><code>genemode</code>, <code>gene.list</code>,
+<code>var_thresh</code> and <code>exp_thresh</code> are about how to
+deal with genes. <code>genemode</code> determines the mode of handling
+genes and <code>gene.list</code>, <code>var_thresh</code>,
+<code>exp_thresh</code> are associated with specific modes. Redeconve
+offers 3 alternative modes of dealing with genes:</p>
+<ol style="list-style-type: decimal">
+<li><p><code>default</code>: Use the intersection of genes in
+<code>ref</code> and <code>st</code>, without other treatment.</p></li>
+<li><p><code>customized</code>: Indicating gene list yourself. Parameter
+<code>gene.list</code> is the list of genes you indicated. Note that
+only those genes within the intersection of <code>ref</code> and
+<code>st</code> would be used.</p></li>
+<li><p><code>filtered</code>: We will use a built-in function
+<code>gene.filter</code> to screen some genes. This function will first
+take the intersection of <code>ref</code> and <code>st</code>, the use
+two indices, <code>var_thresh</code> and <code>exp_thresh</code> to
+filter genes. You can customize these two parameters as well.</p></li>
+</ol>
+<ul>
+<li><code>var_thresh</code> considers variance of reference. Genes whose
+variance across all cells in reference do not reach that threshold will
+be filtered out. The default value is 0.025.</li>
+<li><code>exp_thresh</code> considers expression in spatial
+transcriptomics. Genes whose average count across all spots in spatial
+transcriptomics is less that this value will be filtered out. The
+default value is 0.003.</li>
+</ul>
+</div>
+<div id="mode-of-determining-hyperparameter" class="section level3">
+<h3>3. Mode of determining hyperparameter</h3>
+<p>The hyperparamter is our key to single-cell resolution (See Methods
+for details). Here we still offers 3 modes to determine the
+hyperparameter:</p>
+<ol style="list-style-type: decimal">
+<li><p><code>default</code>: We will calculate a hyperparameter
+according to the number of genes and cells in reference (See Methods for
+details).</p></li>
+<li><p><code>customized</code>: Indicating the hyperparameter
+yourself.</p></li>
+<li><p><code>autoselection</code>: Redeconve will use a procedure to
+select the optimal hyperparameter. In this procedure, a series of
+hyperparameter will be set in the vicinity of the hyperparameter
+selected by mode <code>default</code>, and Redeconve will use these
+hyperparameters to perform deconvolution separately, then return the
+result with the best hyperparameter. You can see Methods for details
+about how we determine the best hyperparameter.</p></li>
+</ol>
+<ul>
+<li>Note that in this procedure, several rounds of deconvolution will be
+performed, so it may take a long time. Under such circumstances,
+parallel computing will be beneficial.</li>
+</ul>
+</div>
+<div id="parallel-computing" class="section level3">
+<h3>4. Parallel computing</h3>
+<p>Sometimes the reference will contain tens of thousands of cells, or
+the spatial transcriptomics will contain tens of thousands of spots
+(e.g. when the data is from Slide-seq), then parallel computing is
+useful. Redeconve uses the package “doSNOW” to achieve parallel
+computing (which means there is a progress bar). Related parameters are
+<code>dopar</code> and <code>ncores</code>.</p>
+<ul>
+<li><code>dopar</code> determines whether to use parallel computing or
+not.</li>
+<li><code>ncores</code> indicates the number of cores to be used in
+parallel computing. It’s recommended to manually set this parameter
+rather than use the function <code>detectCores</code> to avoid
+underlying errors.</li>
+</ul>
+<p><span style="color:red">! Important tips for parallel computing:
+!</span></p>
+<ol style="list-style-type: decimal">
+<li>Our underlying algorithm makes use of OpenBLAS, which may include
+parallel computing inside. Therefore, setting
+<code>system(&quot;export OPENBLAS_NUM_THREADS=1&quot;)</code> is necessary to
+avoid underlying errors.</li>
+<li>An error may be reported when the number of threads is too large :
+<code>Error in socketAccept(socket = socket, blocking = TRUE, open = &quot;a+b&quot;,: all connections are in use</code>.
+If such error occurs, please reduce the number of cores.</li>
+</ol>
+</div>
+<div id="writing-real-time-results" class="section level3">
+<h3>5. Writing real-time results</h3>
+<p>Even with parallel computing, some dataset is still time-consuming.
+Redeconve is able to write results into disk in real time at the cost of
+some running speed. Related parameters are <code>realtime</code> and
+<code>dir</code>.</p>
+<ul>
+<li><code>dopar</code> determines whethers to write the results into
+disk in real time or not.</li>
+<li><code>dir</code> indicates the directory to write the results.</li>
+</ul>
+<p>For real time results, the result of each spot will be write into a
+separate csv file, whose name is the barcode of the spot.</p>
+</div>
+<div id="other-parameters" class="section level3">
+<h3>6. Other parameters</h3>
+<p>The two left parameters are <code>cell.names</code> and
+<code>thre</code>.</p>
+<ul>
+<li><code>cell.names</code>: Chances are that you may not want to use
+all cells in reference to run deconvolution. Then you can indicate which
+cells will be used by this parameter. If you do not specify this
+parameter, all cells will be used.</li>
+<li><code>thre</code>: The estimated cell abundance will not be exactly
+0. This parameter indicates that the abundance less than this value will
+be treated as 0. Generally this value does not need to be adjusted, and
+the result will remain the same within a relatively big range of this
+value.</li>
+</ul>
+</div>
+<div id="a-demo" class="section level3">
+<h3>A demo</h3>
+<p>Next I will use a demo to give an example of how to use this
+function.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## load the data</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#data(basic)</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="do">## check the dimensions of sc and st</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#dim(sc)</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#dim(st)</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="do">## check the number cells in each cell type</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#table(annotations[,&quot;annotations])</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="do">## deconvolution</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#res = deconvoluting(sc,st,genemode=&quot;filt&quot;,hpmode=&quot;def&quot;,dopar=T,ncores=8)</span></span></code></pre></div>
+<ul>
+<li><code>sc</code> and <code>st</code> are separately reference and
+spatial transcriptomics.</li>
+<li>For there are about 20000 genes, <code>genemode</code> is set to
+<code>&quot;filtered&quot;</code> with the default threshold of variance and mean
+expression, which result in #### genes.</li>
+<li><code>hpmode</code> is set to <code>&quot;default&quot;</code> to improve
+efficiency.</li>
+<li><code>dopar</code> is set to <code>TRUE</code> (default value) and
+<code>ncores</code> is set to 8. You can raise the number of cores to
+improve efficiency.</li>
+<li>For this dataset is not very large, <code>realtime</code> is set to
+<code>FALSE</code> (default value).</li>
+<li>We want to use all cells in deconvolution, so we do not need to
+specify <code>cell.names</code>. Also, we do not need to adjust
+<code>thre</code>.</li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="cell-type-deconvolution" class="section level2">
+<h2>Cell-type deconvolution</h2>
+<p>Like other methods, Redeconve can also perform deconvolution at
+cell-type level. This part shows how to do so.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">## get reference</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#ref = get.ref(sc,annotations)</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="do">## deconvolution</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#res.ct = deconvoluting(sc,st,genemode=&quot;filt&quot;,hpmode=&quot;auto&quot;,dopar=T,ncores=8)</span></span></code></pre></div>
+<p>You can see that actually, only one more step is required to convert
+single-cell expression profile to that of cell type. The function
+<code>get.ref</code> will take the average expression of all cells in
+one cell type as the profile of that cell type.</p>
+<p>For the main function, every thing is the same. Here we set
+<code>hpmode</code> as <code>&quot;autoselection&quot;</code>, for there are only
+tens of cell types, then the speed is fast enough for us to run several
+rounds of deconvolution.</p>
+<hr />
+</div>
+<div id="downstream-analysis-and-visualization" class="section level2">
+<h2>Downstream analysis and visualization</h2>
+<p>Redeconve offers many built-in functions for downstream analysis and
+visualization.</p>
+<div id="cell-occurrence" class="section level3">
+<h3>Cell occurrence</h3>
+<p>The function <code>cell.occur</code> shows the number of cells
+actually used in deconvolution, and the number of spots that every used
+cell occurs.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#cell.occur(res)</span></span></code></pre></div>
+</div>
+<div id="abundance-of-all-or-some-specific-cells" class="section level3">
+<h3>Abundance of all or some specific cells</h3>
+<p>The function <code>cell.type.weight</code> can plot the abundance of
+all cells (or cell types) or some cells you indicate. Here we want to
+plot the abundance of three T cells, so we set
+<code>cell.type = F</code> and <code>cell.names</code> as the names of
+cells we concern.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Tcells = c(&quot;T.cells...NK.cells.8&quot;,&quot;T.cells...NK.cells.11&quot;,&quot;T.cells...NK.cells.35&quot;)</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#cell.type.weight(res,F,cell.names=Tcells,coords=coords,name=&quot;Tcells.pdf&quot;)</span></span></code></pre></div>
+<p>The output file, named “Tcells.pdf”, can be found under current
+directory.</p>
+</div>
+<div id="spatial-pie-chart" class="section level3">
+<h3>Spatial pie chart</h3>
+<p>The function <code>spatial.pie</code> can plot the spatial pie chart,
+showing the proportion of each cell type in each spatial spot.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># for this is a demo, we use default colors</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#spatial.piechart(res,coords)</span></span></code></pre></div>
+</div>
+<div id="spot-pie-chart" class="section level3">
+<h3>Spot pie chart</h3>
+<p>The function <code>spot.pie</code> can plot the proportion of each
+cell type within a certain spot.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#spot.pie(res[,&quot;X27x18&quot;],title=&quot;X27x18&quot;)</span></span></code></pre></div>
+</div>
+<div id="spatial-expression-profile-imputation-and-reference-correction" class="section level3">
+<h3>Spatial expression profile imputation and reference correction</h3>
+<p>In spatial transcriptomics, drop-out is very severe. Meanwhile, the
+cell state of cells in spatial spot would not be exactly the same with
+that in reference. Here Redeconve offers a function that solves both
+problems. The function <code>profile.correction</code> can do impitation
+as well as profile correction for a single spot.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ests = profile.correction(res[,&quot;X27x18&quot;],st[,&quot;X27x18&quot;],sc,ncores=8)</span></span></code></pre></div>
+<p>This is another quadratic programming problem: the goal is to let the
+corrected spatial expression higher than the observed (imputation). The
+return value is the “real” cell states in that spot after
+imputation.</p>
+<p>We can use the function <code>profile.comparison</code> to see the
+difference between reference and corrected expression profile:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#profile.comparison(sc,ests)</span></span></code></pre></div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

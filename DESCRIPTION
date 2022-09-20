@@ -1,0 +1,37 @@
+Package: Redeconve
+Title: Deconvolution of spatial transcriptome with single cell
+        resolution.
+Version: 0.0.0.9008
+Authors@R: 
+    person(given = "First",
+           family = "Last",
+           role = c("aut", "cre"),
+           email = "first.last@example.com",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: Deconvolution of spatial transcriptome with single cell resolution.
+License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
+        license
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.1
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr
+Imports: 
+    Matrix,
+    Hmisc,
+    quadprog,
+    sampling,
+    doSNOW,
+    reshape2,
+    ggrepel
+Depends: 
+    foreach,
+    ggplot2,
+    igraph,
+    R (>= 2.10),
+    scatterpie
+NeedsCompilation: yes
+Packaged: 2022-05-09 02:00:26 UTC; zhouzx
+Author: First Last [aut, cre] (YOUR-ORCID-ID)
+Maintainer: First Last <first.last@example.com>
