@@ -11,14 +11,13 @@ Deconvolution of spatial transcriptomics on single-cell resolution.
 Please use the following codes to install *Redeconve*:
 ```{r}
 # install.packages("devtools")
-devtools::install_github("ZxZhou4150/Redeconve", build_vignettes = T)
-## It may take some time to build the vignette 
+devtools::install_github("ZxZhou4150/Redeconve", build_vignettes = F)
 ```
+You may also set `build_vignettes` as `T`, but it may take some time to build the vignette (1 hour or so). If you don't want to build vignette, please see 
 
+[here]: file:///D:/PC/R/Redeconve/vignettes/Redeconve.html
 
-### Vignettes
----------------------
-Please use the following codes to view vignettes:
+for the sinplified vignette. If you choose to build the vignette, please use the following codes to view vignettes:
 ```{r}
 browseVignettes("Redeconve")
 ```
