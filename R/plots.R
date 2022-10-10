@@ -4,11 +4,15 @@
 #'
 #' @param nums Results of \code{deconvoluting}.
 #'
+#' @return This function will return a plot showing the occurrence of cells as well as a global variable named "occurred.cells"
+#' showing the names of the cells occurred.
+#'
 #' @export
 cell.occur = function(nums){
   nums = as.matrix(nums)
   counts = nums>0
   occurs = apply(counts,1,sum)
+  occurred.cells <<- names(occurs[which(occurs>0)])
   occurs = occurs[order(occurs,decreasing = T)]
   ncells = length(occurs)
   options(warn = -1)
