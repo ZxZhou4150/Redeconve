@@ -30,6 +30,7 @@
 #'
 #' @export
 deconvoluting = function(ref, st, cell.names = NULL, genemode, gene.list, var_thresh=0.025, exp_thresh=0.03, hpmode, hp,  thre = 1e-10, dopar = T, ncores, realtime = F, dir = NULL){
+  if(missing(ncores)){stop("Parameter \"ncores\" is required to avoid latent errors.")}
   ref = as.matrix(ref); st = as.matrix(st)
   if(!is.null(cell.names)){
     ncells = length(cell.names)
