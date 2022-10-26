@@ -34,40 +34,38 @@ cell.occur = function(nums){
   return(p)
 }
 
-#' Colocalization of cell types
+#' Heatmap of any correlation
 #'
-#' This function plots the correlation matrix of cell abundance, to infer colocaliaztion of cell types.
+#' This function
 #'
-#' @param nums Results of \code{deconvoluting}.
-#' @param cell.type Whether to merge \code{nums} by cell type. If \code{TRUE}, a \code{cell type * cell type}
-#' correlation matrix will be returned.
-#' @param annotations If \code{cell.type = F}, this should be the annotation of the single cells.
+#' @param x The data whose correlation will be calculated and visualized. One column represents one variable.
+#' @param group
 #' @param method Method of calculating correlation coefficient.
 #'
 #' @return A global variable named "corr", represents for correlation of cell type
 #' proportion across spatial locations and its visualization.
 #'
 #' @export
-coloc.corr = function(nums, cell.type, annotations, method = c("pearson","spearman")){
-  nums = as.matrix(nums)
-  if(cell.type == F){
-    corr <<- Hmisc::rcorr(t(nums),type = method)[["r"]]
-  }
-  else{
-    typenums = sc2type(nums,annotations)
-    corr <<- Hmisc::rcorr(t(typenums),type = method)[["r"]]
-  }
+corr.heatmap = function(x, group, method = c("pearson","spearman")){
+  x = as.matrix(x)
+  corr <<- Hmisc::rcorr(x,type=method)[["r"]]
   corrtp = reshape2::melt(corr)
   ggplot(corrtp,aes(x=Var1,y=Var2,fill=value))+
     geom_tile()+
     scale_fill_gradient2(low="White", high="Blue")+
     labs(x=NULL,y=NULL,title = "correlation")+
     theme_bw(base_size = 15)+
-    theme(axis.text.x = element_text(angle=90,vjust=0.5))
-  return(corr)
+    theme(axis.text.x = element_blank(),
+          axis.text.y = element_blank())
 }
 
-#' converting single cell results to type results
+#' Converting single cell results to type results
+#'
+#' This function converts single-cell abundance to cell-type abundance.
+#'
+#' @param nums The results of single-cell resolution
+#' @param annotations The annotation of the single cells.
+#'
 #' @export
 sc2type = function(nums,annotations){
   ord = order(annotations[,2])
@@ -129,7 +127,7 @@ cell.type.weight = function(nums,cell.type,annotations,cell.names=NULL,coords,na
 
 #' Visualization of colocalization
 #'
-#' Draws a network to show colocalization of cells (cell types).
+#' This function draws a network to show colocalization of cells (cell types).
 #'
 #' @param corr Correlation matrix returned by \code{coloc.corr}
 #' @param thresh Threshold of correlation coefficient. Value large than this value will be regarded as an edge.
