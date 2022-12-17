@@ -19,6 +19,7 @@
 #' setting the hyperparameter yourself; "\code{autoselection}", automatically calculating
 #' and selecting the optimal hyperparameter(may take a long time).
 #' @param hp If \code{hpmode = "customized"}, this will be the hyperparameter you want to use.
+#' @param aver_cell A priori number indicating the average cell number of one spot. This varies according to the platform.
 #' @param thre Threshold, numbers less than this value in the result will be regarded as zero.
 #' Default is \code{1e-10}.
 #' @param dopar Whether to use parallel computing. \code{TRUE} is recommended when
@@ -26,11 +27,12 @@
 #' @param ncores Number of cores to be used when doing parallel computing.
 #' @param realtime Whether to write results into disk in real time.
 #'
-#' @return A matrix, showing the number of estimated number of each cell(cell type) in each spot.
+#' @return A matrix, showing the number of estimated absolute abundance of each cell(cell type) in each spot.
 #'
 #' @export
-deconvoluting = function(ref, st, cell.names = NULL, genemode, gene.list, var_thresh=0.025, exp_thresh=0.03, hpmode, hp,  thre = 1e-10, dopar = T, ncores, realtime = F, dir = NULL){
+deconvoluting = function(ref, st, cell.names = NULL, genemode, gene.list, var_thresh=0.025, exp_thresh=0.03, hpmode, hp, aver_cell,  thre = 1e-10, dopar = T, ncores, realtime = F, dir = NULL){
   if(missing(ncores)){stop("Parameter \"ncores\" is required to avoid latent errors.")}
+  if(missing(aver_cell)){stop("")}
   ref = as.matrix(ref); st = as.matrix(st)
   if(!is.null(cell.names)){
     ncells = length(cell.names)
@@ -92,6 +94,11 @@ deconvoluting = function(ref, st, cell.names = NULL, genemode, gene.list, var_th
     nums = numlist[[totake]]
   }
   nums[nums<thre] = 0
+
+  totalcell = nspots*aver_cell
+  sumnum = sum(nums)
+  nums = nums/sumnum*totalcell
+
   nums = as(nums,"dgCMatrix")
   return(nums)
 }
