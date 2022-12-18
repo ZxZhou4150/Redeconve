@@ -29,7 +29,7 @@ This part describes how to use the main function `deconvoluting` to perform sing
 The usage of `deconvoluting` is as follows:
 
 ```{r}
-# nums = deconvoluting(ref, st, cell.names=NULL, genemode, gene.list, var_thresh=0.025, exp_thresh=0.03, hpmode, hp, thre=1e-10, dopar=T, ncores, realtime=F, dir=NULL)
+# nums = deconvoluting(ref, st, cellnames=NULL, genemode, gene.list, var_thresh=0.025, exp_thresh=0.03, hpmode, hp, aver_cell, thre=1e-10, dopar=T, ncores, realtime=F, dir=NULL)
 ```
 
 It does contains many parameters. Next, I will divide these parameters into several parts by function, and explain them one by one.
@@ -87,11 +87,15 @@ Even with parallel computing, some dataset is still time-consuming. Redeconve is
 
 For real time results, the result of each spot will be write into a separate csv file, whose name is the barcode of the spot.
 
-### 6. Other parameters
+### 6. Estimating absolute abundance
 
-The two left parameters are `cell.names` and `thre`.
+Since our algorithm will normalize reference, parameter `aver_cell` is required  to estimate the absolute abundance of each cell state. This value indicates the average number of cells in one spot. Users can determine it according to the platform of st data. For example, 10x Visium has a spot radius of about 50$\mu$m, so this value for a 10x Visium dataset is about 10.
 
--   `cell.names`: Chances are that you may not want to use all cells in reference to run deconvolution. Then you can indicate which cells will be used by this parameter. If you do not specify this parameter, all cells will be used.
+### 7. Other parameters
+
+The two left parameters are `cellnames` and `thre`.
+
+-   `cellnames`: Chances are that you may not want to use all cells in reference to run deconvolution. Then you can indicate which cells will be used by this parameter. If you do not specify this parameter, all cells will be used.
 -   `thre`: The estimated cell abundance will not be exactly 0. This parameter indicates that the abundance less than this value will be treated as 0. Generally this value does not need to be adjusted, and the result will remain the same within a relatively big range of this value.
 
 ### A demo
@@ -111,15 +115,16 @@ table(annotations[,2])
 
 ## deconvolution
 # this may take a long time
-res = deconvoluting(sc,st,genemode="filt",hpmode="def",dopar=T,ncores=8)
+res = deconvoluting(sc,st,genemode="filt",hpmode="def",aver_cell=25,dopar=T,ncores=8)
 ```
 
 -   `sc` and `st` are separately reference and spatial transcriptomics.
 -   For there are about 20000 genes, `genemode` is set to `"filtered"` with the default threshold of variance and mean expression, which result in \#### genes.
 -   `hpmode` is set to `"default"` to improve efficiency.
 -   `dopar` is set to `TRUE` (default value) and `ncores` is set to 8. You can raise the number of cores to improve efficiency.
+-   This dataset is from the ST platform whose spot radius is about 100 $\mu$m, so we set `aver_cell` as 25.
 -   For this dataset is not very large, `realtime` is set to `FALSE` (default value).
--   We want to use all cells in deconvolution, so we do not need to specify `cell.names`. Also, we do not need to adjust `thre`.
+-   We want to use all cells in deconvolution, so we do not need to specify `cellnames`. Also, we do not need to adjust `thre`.
 
 ------------------------------------------------------------------------
 
@@ -171,11 +176,11 @@ The output file, named "colocalization_network.pdf", can be found under current 
 
 ### Abundance of all or some specific cells
 
-The function `cell.type.weight` can plot the abundance of all cells (or cell types) or some cells you indicate.  Here we want to plot the abundance of three T cells, so we set `cell.type = F` and `cell.names` as the names of cells we concern.
+The function `cell.type.weight` can plot the abundance of all cells (or cell types) or some cells you indicate.  Here we want to plot the abundance of three T cells, so we set `cell.type = F` and `cellnames` as the names of cells we concern.
 
 ```{r}
 Tcells = c("T.cells...NK.cells.8","T.cells...NK.cells.11","T.cells...NK.cells.35")
-cell.type.weight(res,F,cell.names=Tcells,coords=coords,name="Tcells.pdf")
+cell.type.weight(res,F,cellnames=Tcells,coords=coords,name="Tcells.pdf")
 ```
 
 The output file, named "Tcells.pdf", can be found under current directory.
