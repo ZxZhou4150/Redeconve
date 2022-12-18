@@ -5,7 +5,7 @@
 #'
 #' @param ref Reference, the scRNA-seq data. Pseudo-count will be added and counts will be normalized to TPM.
 #' @param st Spatial transcriptomics to be deconvoluted
-#' @param cell.names (optional) Cells(Cell types) to be used for deconvolution in reference.
+#' @param cellnames (optional) Cells(Cell types) to be used for deconvolution in reference.
 #' If missing, all cells will be used.
 #' @param genemode Mode of genes to be included in deconvolution. Three modes are available: "\code{default}", using the intersect of \code{ref} and \code{st};
 #' "\code{customized}", indicating the genes yourself; "\code{filtered}", use some parameters to filter the genes (see \code{var_thresh} and \code{exp_thresh}
@@ -30,7 +30,7 @@
 #' @return A matrix, showing the number of estimated absolute abundance of each cell(cell type) in each spot.
 #'
 #' @export
-deconvoluting = function(ref, st, cell.names = NULL, genemode, gene.list, var_thresh=0.025, exp_thresh=0.03, hpmode, hp, aver_cell,  thre = 1e-10, dopar = T, ncores, realtime = F, dir = NULL){
+deconvoluting = function(ref, st, cellnames = NULL, genemode, gene.list, var_thresh=0.025, exp_thresh=0.03, hpmode, hp, aver_cell,  thre = 1e-10, dopar = T, ncores, realtime = F, dir = NULL){
   if(missing(ncores)){stop("Parameter \"ncores\" is required to avoid latent errors.")}
   if(missing(aver_cell)){stop("")}
   ref = as.matrix(ref); st = as.matrix(st)
