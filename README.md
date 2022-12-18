@@ -18,7 +18,3 @@ You may also set `build_vignettes` as `T`, but it may take some time to build th
 ```{r}
 browseVignettes("Redeconve")
 ```
-
-### About demo
----------------------
-The data in the folder "demo" is from the PDAC dataset of our paper. The ST data have 438 spatial spots. Both ST and scRNA-seq data are processed so that they have 19736 intersected genes.
