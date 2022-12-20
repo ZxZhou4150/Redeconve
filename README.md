@@ -1,5 +1,5 @@
 # Redeconve
-Deconvolution of spatial transcriptomics on single-cell resolution.
+Deconvolution of spatial transcriptomics at single-cell resolution.
 
 
 * This package is still under development.
