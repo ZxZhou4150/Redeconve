@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup, warning=FALSE}
-library(Redeconve)
+#library(Redeconve)
 ```
 
 ------------------------------------------------------------------------
@@ -29,7 +29,7 @@ This part describes how to use the main function `deconvoluting` to perform sing
 The usage of `deconvoluting` is as follows:
 
 ```{r}
-# nums = deconvoluting(ref, st, cellnames=NULL, genemode, gene.list, var_thresh=0.025, exp_thresh=0.03, hpmode, hp, aver_cell, thre=1e-10, dopar=T, ncores, realtime=F, dir=NULL)
+## nums = deconvoluting(ref, st, cellnames=NULL, genemode, gene.list, var_thresh=0.025, exp_thresh=0.03, hpmode, hp, aver_cell, thre=1e-10, dopar=T, ncores, realtime=F, dir=NULL)
 ```
 
 It does contains many parameters. Next, I will divide these parameters into several parts by function, and explain them one by one.
@@ -104,18 +104,18 @@ Next I will use a demo to give an example of how to use this function.
 
 ```{r}
 ## load the data
-data(basic)
+#data(basic)
 
 ## check the dimensions of sc and st
-dim(sc)
-dim(st)
+#dim(sc)
+#dim(st)
 
 ## check the number cells in each cell type
-table(annotations[,2])
+#table(annotations[,2])
 
 ## deconvolution
 # this may take a long time
-res = deconvoluting(sc,st,genemode="filt",hpmode="def",aver_cell=25,dopar=T,ncores=8)
+#res = deconvoluting(sc,st,genemode="filt",hpmode="def",aver_cell=25,dopar=T,ncores=8)
 ```
 
 -   `sc` and `st` are separately reference and spatial transcriptomics.
@@ -155,32 +155,24 @@ Redeconve offers many built-in functions for downstream analysis and visualizati
 The function `cell.occur` shows the number of cells actually used in deconvolution, and the number of spots that every used cell occurs.
 
 ```{r}
-cell.occur(res)
+#cell.occur(res)
 ```
 
-### Co-localization
+### Find cells of interest
 
-Redeconve offers two main functions to explore co-localization. `coloc.corr` uses the correlation of cell abundance to infer co-localization, and `coloc.network` draws a network to visualize co-localization.
+Redeconve offers a function to highlight those cells with high average abundance and/or high variance. Users can then explore those cells. Note that this function can only be run after `cell.occur`, because it needs `occurred.cells` as input, which is an output of `cell.occur`.
 
 ```{r}
-# This function merges single cells to cell types
-res.ctmerge = sc2type(res,annotations)
-
-corr = coloc.corr(res.ctmerge,F,method="pearson")
-
-#coloc.network()
+#show.cellsofinterest(res, occurred.cells)
 ```
-
-The output file, named "colocalization_network.pdf", can be found under current directory.
-
 
 ### Abundance of all or some specific cells
 
 The function `cell.type.weight` can plot the abundance of all cells (or cell types) or some cells you indicate.  Here we want to plot the abundance of three T cells, so we set `cell.type = F` and `cellnames` as the names of cells we concern.
 
 ```{r}
-Tcells = c("T.cells...NK.cells.8","T.cells...NK.cells.11","T.cells...NK.cells.35")
-cell.type.weight(res,F,cellnames=Tcells,coords=coords,name="Tcells.pdf")
+#Tcells = c("T.cells...NK.cells.8","T.cells...NK.cells.11","T.cells...NK.cells.35")
+#cell.type.weight(res,F,cellnames=Tcells,coords=coords,name="Tcells.pdf")
 ```
 
 The output file, named "Tcells.pdf", can be found under current directory.
@@ -192,7 +184,7 @@ The function `spatial.pie` can plot the spatial pie chart, showing the proportio
 ```{r}
 # For this is a demo, we use default colors
 # This may take some time
-spatial.piechart(res.ctmerge,coords)
+#spatial.piechart(res.ctmerge,coords)
 ```
 
 ### Spot pie chart
@@ -200,15 +192,31 @@ spatial.piechart(res.ctmerge,coords)
 The function `spot.pie` can plot the proportion of each cell type within a certain spot.
 
 ```{r}
-spot.pie(res[,"X27x18"],title="X27x18")
+#spot.pie(res[,"X27x18"],title="X27x18")
 ```
+
+### Co-localization
+
+Redeconve offers two main functions to explore co-localization. `coloc.corr` uses the correlation of cell abundance to infer co-localization, and `coloc.network` draws a network to visualize co-localization.
+
+```{r}
+# This function merges single cells to cell types
+#res.ctmerge = sc2type(res,annotations)
+
+#corr = coloc.corr(res.ctmerge,F,method="pearson")
+
+#coloc.network()
+```
+
+The output file, named "colocalization_network.pdf", can be found under current directory.
+
 
 ### Spatial expression profile imputation and reference correction
 
 In spatial transcriptomics, drop-out is very severe. Meanwhile, the cell state of cells in spatial spot would not be exactly the same with that in reference. Here Redeconve offers a function that solves both problems. The function `profile.correction` can do impitation as well as profile correction for a single spot.
 
 ```{r}
-ests = profile_correction(res[,"X27x18"],st[,"X27x18"],sc,ncores=8)
+#ests = profile_correction(res[,"X27x18"],st[,"X27x18"],sc,ncores=8)
 ```
 
 This is another quadratic programming problem: the goal is to let the corrected spatial expression higher than the observed (imputation). The return value is the "real" cell states in that spot after imputation.
@@ -216,5 +224,5 @@ This is another quadratic programming problem: the goal is to let the corrected 
 We can use the function `profile_comparison` to see the difference between reference and corrected expression profile:
 
 ```{r}
-profile_comparison(sc,ests)
+#profile_comparison(sc,ests)
 ```
