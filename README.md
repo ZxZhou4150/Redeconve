@@ -2,7 +2,7 @@
 Deconvolution of spatial transcriptomics at single-cell resolution.
 
 
-* This package is still under development.
+* This package is still under development. Vignette and manual is incomplete now, but functions are complete.
 
 
 ### History
