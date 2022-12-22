@@ -2,7 +2,8 @@
 Deconvolution of spatial transcriptomics at single-cell resolution.
 
 
-* This package is still under development.
+* This package is still under development. Now the basic functions are complete and we will include more functions and optimization in the future.
+* To see codes analyzing the paper, please refer to https://codeocean.com/capsule/5481250/tree (not published yet).
 
 
 ### History
