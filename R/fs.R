@@ -203,7 +203,7 @@ solveqp = function(ncells,r,x,y,G,sc){
 #'
 #' @return A matrix showing the gene expression profile of each cell type,
 #' one row represents one cell type and one column represents one gene.
-#' This function will also write a global variable named `new.annotation`,
+#' If there are cells missing annotations, this function will also write a global variable named `new.annotation`,
 #' where cells missing annotation are labeled as "_Unknown".
 #'
 #' @export
@@ -243,7 +243,9 @@ get.ref = function(sc,annotations,gene.list = NULL){
     }
     begin = end+1
   }
-  new.annotation <<- cbind.data.frame(colnames(sc),new.annotation)
+  if(length(shared)<ncells){
+    new.annotation <<- cbind.data.frame(colnames(sc),new.annotation)
+  }
   return(ref)
 }
 
