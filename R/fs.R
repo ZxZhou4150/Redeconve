@@ -31,12 +31,12 @@
 #'
 #' @export
 deconvoluting = function(ref, st, cellnames = NULL, genemode, gene.list, var_thresh=0.025, exp_thresh=0.03, hpmode, hp, aver_cell,  thre = 1e-10, dopar = T, ncores, realtime = F, dir = NULL){
-  if(missing(ncores)){stop("Parameter \"ncores\" is required to avoid latent errors.")}
+  if((dopar==T) & (missing(ncores))){stop("Parameter \"ncores\" is required to avoid latent errors.")}
   if(missing(aver_cell)){stop("")}
   ref = as.matrix(ref); st = as.matrix(st)
-  if(!is.null(cell.names)){
-    ncells = length(cell.names)
-    ref = ref[,cell.names]
+  if(!is.null(cellnames)){
+    ncells = length(cellnames)
+    ref = ref[,cellnames]
   }
   else ncells = ncol(ref)
 
