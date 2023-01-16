@@ -478,13 +478,17 @@ dataset is about 10.</p>
 </div>
 <div id="other-parameters" class="section level3">
 <h3>7. Other parameters</h3>
-<p>The two left parameters are <code>cellnames</code> and
-<code>thre</code>.</p>
+<p>The left parameters are <code>cellnames</code>,
+<code>normalize</code> and <code>thre</code>.</p>
 <ul>
 <li><code>cellnames</code>: Chances are that you may not want to use all
 cells in reference to run deconvolution. Then you can indicate which
 cells will be used by this parameter. If you do not specify this
 parameter, all cells will be used.</li>
+<li><code>normalize</code>: Redeconve can also be used for bulk RNA-seq
+deconvolution. When doing this, normalization for reference is not
+required. When deconvoluting spatial transcriptomics, normalization is
+recommended.</li>
 <li><code>thre</code>: The estimated cell abundance will not be exactly
 0. This parameter indicates that the abundance less than this value will
 be treated as 0. Generally this value does not need to be adjusted, and
@@ -549,6 +553,10 @@ one cell type as the profile of that cell type.</p>
 <code>hpmode</code> as <code>&quot;autoselection&quot;</code>, for there are only
 tens of cell types, then the speed is fast enough for us to run several
 rounds of deconvolution.</p>
+<hr />
+<!-- ## Dealing with large scRNA datasets -->
+<!-- Nowadays the scale of scRNA datasets are getting increasingly larger. Sometimes the reference cells can reach to sub-million or million level. Here we provide two ways to deal with this situation: -->
+<!-- 1. When proper annotations are available,  -->
 <hr />
 </div>
 <div id="downstream-analysis-and-visualization" class="section level2">
