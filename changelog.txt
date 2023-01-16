@@ -1,1 +1,3 @@
+2023.1.16：
+- Added a new parameter, "normalize", into function "deconvoluting" to deal with bulk decovolution.
 ===================================
