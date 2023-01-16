@@ -93,9 +93,10 @@ Since our algorithm will normalize reference, parameter `aver_cell` is required 
 
 ### 7. Other parameters
 
-The two left parameters are `cellnames` and `thre`.
+The left parameters are `cellnames`, `normalize` and `thre`.
 
 -   `cellnames`: Chances are that you may not want to use all cells in reference to run deconvolution. Then you can indicate which cells will be used by this parameter. If you do not specify this parameter, all cells will be used.
+-   `normalize`: Redeconve can also be used for bulk RNA-seq deconvolution. When doing this, normalization for reference is not required. When deconvoluting spatial transcriptomics, normalization is recommended.
 -   `thre`: The estimated cell abundance will not be exactly 0. This parameter indicates that the abundance less than this value will be treated as 0. Generally this value does not need to be adjusted, and the result will remain the same within a relatively big range of this value.
 
 ### A demo
@@ -143,6 +144,14 @@ Like other methods, Redeconve can also perform deconvolution at cell-type level.
 You can see that actually, only one more step is required to convert single-cell expression profile to that of cell type. The function `get.ref` will take the average expression of all cells in one cell type as the profile of that cell type.
 
 For the main function, every thing is the same. Here we set `hpmode` as `"autoselection"`, for there are only tens of cell types, then the speed is fast enough for us to run several rounds of deconvolution.
+
+------------------------------------------------------------------------
+
+<!-- ## Dealing with large scRNA datasets -->
+
+<!-- Nowadays the scale of scRNA datasets are getting increasingly larger. Sometimes the reference cells can reach to sub-million or million level. Here we provide two ways to deal with this situation: -->
+
+<!-- 1. When proper annotations are available,  -->
 
 ------------------------------------------------------------------------
 
