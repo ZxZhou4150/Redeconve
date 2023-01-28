@@ -270,7 +270,7 @@ gene.filter = function(ref,st,var_thresh = 0.025,exp_thresh = 0.003){
   MIN.OBS = exp_thresh*nspots
   bulk.vec = rowSums(st)
   gene.list = rownames(ref)
-  if(length(grep("mt-",gene.list))>0)gene.list = gene.list[-grep("mt-", gene.list)]
+  if(length(grep("[Mm][Tt]-",gene.list))>0)gene.list = gene.list[-grep("mt-", gene.list)]
   gene.list = intersect(gene.list, names(bulk.vec))
   gene.list = gene.list[bulk.vec[gene.list] >= MIN.OBS]
   vars=apply(ref[gene.list,],1,var)
