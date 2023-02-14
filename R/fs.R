@@ -19,7 +19,7 @@
 #' setting the hyperparameter yourself; "\code{autoselection}", automatically calculating
 #' and selecting the optimal hyperparameter(may take a long time).
 #' @param hp If \code{hpmode = "customized"}, this will be the hyperparameter you want to use.
-#' @param aver_cell A priori number indicating the average cell number of one spot. This varies according to the platform. Default is 1.
+#' @param aver_cell A priori number indicating the average cell number of one spot. This varies according to the platform.
 #' @param normalize Whether to normalize the reference or not. `TRUE` is the default value and is recommended when deconvoluting spatial transcriptomics.
 #' @param thre Threshold, numbers less than this value in the result will be regarded as zero.
 #' Default is \code{1e-10}.
@@ -31,7 +31,7 @@
 #' @return A matrix, showing the number of estimated absolute abundance of each cell(cell type) in each spot.
 #'
 #' @export
-deconvoluting = function(ref, st, cellnames=NULL, genemode, gene.list, var_thresh=0.025, exp_thresh=0.03, hpmode, hp, aver_cell=1, normalize=T, thre=1e-10, dopar=T, ncores, realtime=F, dir=NULL){
+deconvoluting = function(ref, st, cellnames=NULL, genemode, gene.list, var_thresh=0.025, exp_thresh=0.03, hpmode, hp, aver_cell, normalize=T, thre=1e-10, dopar=T, ncores, realtime=F, dir=NULL){
   if((dopar==T) & (missing(ncores))){stop("Parameter \"ncores\" is required to avoid latent errors.")}
   if(missing(aver_cell)){stop("")}
   ref = as.matrix(ref); st = as.matrix(st)
