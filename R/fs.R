@@ -33,7 +33,7 @@
 #' @export
 deconvoluting = function(ref, st, cellnames=NULL, genemode, gene.list, var_thresh=0.025, exp_thresh=0.03, hpmode, hp, aver_cell, normalize=T, thre=1e-10, dopar=T, ncores, realtime=F, dir=NULL){
   if((dopar==T) & (missing(ncores))){stop("Parameter \"ncores\" is required to avoid latent errors.")}
-  if(missing(aver_cell)){stop("")}
+  if(missing(aver_cell)){stop("Average number of cells not indicated")}
   ref = as.matrix(ref); st = as.matrix(st)
   if(!is.null(cellnames)){
     ncells = length(cellnames)
