@@ -34,30 +34,30 @@ cell.occur = function(nums){
   return(p)
 }
 
-#' Heatmap of any correlation
-#'
-#' This function
-#'
-#' @param x The data whose correlation will be calculated and visualized. One column represents one variable.
-#' @param group
-#' @param method Method of calculating correlation coefficient.
-#'
-#' @return A global variable named "corr", represents for correlation of cell type
-#' proportion across spatial locations and its visualization.
-#'
-#' @export
-corr.heatmap = function(x, group, method = c("pearson","spearman")){
-  x = as.matrix(x)
-  corr <<- Hmisc::rcorr(x,type=method)[["r"]]
-  corrtp = reshape2::melt(corr)
-  ggplot(corrtp,aes(x=Var1,y=Var2,fill=value))+
-    geom_tile()+
-    scale_fill_gradient2(low="White", high="Blue")+
-    labs(x=NULL,y=NULL,title = "correlation")+
-    theme_bw(base_size = 15)+
-    theme(axis.text.x = element_blank(),
-          axis.text.y = element_blank())
-}
+#' #' Heatmap of any correlation
+#' #'
+#' #' This function
+#' #'
+#' #' @param x The data whose correlation will be calculated and visualized. One column represents one variable.
+#' #' @param group
+#' #' @param method Method of calculating correlation coefficient.
+#' #'
+#' #' @return A global variable named "corr", represents for correlation of cell type
+#' #' proportion across spatial locations and its visualization.
+#' #'
+#' #' @export
+#' corr.heatmap = function(x, group, method = c("pearson","spearman")){
+#'   x = as.matrix(x)
+#'   corr <<- Hmisc::rcorr(x,type=method)[["r"]]
+#'   corrtp = reshape2::melt(corr)
+#'   ggplot(corrtp,aes(x=Var1,y=Var2,fill=value))+
+#'     geom_tile()+
+#'     scale_fill_gradient2(low="White", high="Blue")+
+#'     labs(x=NULL,y=NULL,title = "correlation")+
+#'     theme_bw(base_size = 15)+
+#'     theme(axis.text.x = element_blank(),
+#'           axis.text.y = element_blank())
+#' }
 
 #' Converting single cell results to type results
 #'
@@ -115,12 +115,44 @@ cell.type.weight = function(nums,cell.type,annotations,cell.names=NULL,coords,na
     toplot = cbind.data.frame(coords,weight)
     colnames(toplot) = c("x","y","weight")
     plots[[i]] = ggplot(toplot)+
-      geom_point(aes(x=x,y=y,color=weight,size=1))+
+      geom_point(aes(x=x,y=y,color=weight),size=1)+
       scale_color_gradient(limits=c(0,1),low="#F5F5F5",high="blue")+
       labs(title = celltypes[i])+
       theme_classic()
   }
   pdf(name)
+  invisible(lapply(plots, print))
+  dev.off()
+}
+
+#' Spatial expression
+#'
+#' Visualization of spatial expression of some genes.
+#'
+#' @param st Spatial transcriptomics.
+#' @param coords Coordinates of spatial spots.
+#' @param gene.list List of genes.
+#'
+#' @return A pdf file named "spatial_genes".
+#'
+#' @export
+spatial_gene = function(st,coords,gene.list){
+  if(sum(! gene.list %in% rownames(st))>0){
+    warning("Some genes are not in st. Such genes are ignored.")
+  }
+  genelist = intersect(gene.list,rownames(st))
+  ngenes = length(gene.list)
+  plots = vector(mode = "list",length = ngenes)
+  for(i in 1:ngenes){
+    toplot = cbind.data.frame(coords,st[genelist[i],])
+    colnames(toplot) = c("x","y","expression")
+    plots[[i]] = ggplot(toplot)+
+      geom_point(aes(x=x,y=y,color=expression),size=1)+
+      scale_color_gradient(low="#F5F5F5",high="blue")+
+      labs(title = genelist[i])+
+      theme_classic()
+  }
+  pdf("spatial_genes")
   invisible(lapply(plots, print))
   dev.off()
 }
@@ -190,6 +222,8 @@ spatial.piechart=function(nums,coords,colors=NULL,title=NULL){
 #' @param ref Original reference.
 #' @param ests Corrected expression profile.
 #' @param barcodes (Optional) the barcodes of the cells whose profile is to compared. Default is all.
+#'
+#' @return A pdf file named "profile_comparison".
 #'
 #' @export
 profile_comparison = function(ref,ests,barcodes=NULL){
