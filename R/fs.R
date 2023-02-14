@@ -43,10 +43,10 @@ deconvoluting = function(ref, st, cellnames=NULL, genemode, gene.list, var_thres
 
   genemode = match.arg(genemode,c("default","customized","filtered"))
   if(genemode=="default"){
-    gene.list = gene.filter(ref,st,0,0)
+    gene.list = intersect(rownames(ref),rownames(st))
   }
   else if(genemode=="customized"){
-    intersection = gene.filter(ref,st,0,0)
+    intersection = intersect(rownames(ref),rownames(st))
     if(sum(! gene.list %in% intersection)>0){
       warning("Some genes are not in ref or st. Such genes are ignored.")
     }
