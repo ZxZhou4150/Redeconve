@@ -115,12 +115,19 @@ cell.type.weight = function(nums,cell.type,annotations,cell.names=NULL,coords,na
     toplot = cbind.data.frame(coords,weight)
     colnames(toplot) = c("x","y","weight")
     plots[[i]] = ggplot(toplot)+
-      geom_point(aes(x=x,y=y,color=weight),size=1)+
+      geom_point(aes(x=x,y=y,color=weight),size=4)+
       scale_color_gradient(limits=c(0,1),low="#F5F5F5",high="blue")+
       labs(title = celltypes[i])+
-      theme_classic()
+      theme_classic()+
+      theme(axis.title.x = element_text(size=20),
+            axis.title.y = element_text(size=20),
+            axis.text.x = element_text(size=15),
+            axis.text.y = element_text(size=15),
+            title = element_text(size=20),
+            legend.title = element_text(size=12),
+            legend.text = element_text(size=12))
   }
-  pdf(name)
+  pdf(paste0(name,".pdf"),width=7,height=6)
   invisible(lapply(plots, print))
   dev.off()
 }
@@ -136,7 +143,7 @@ cell.type.weight = function(nums,cell.type,annotations,cell.names=NULL,coords,na
 #' @return A pdf file named "spatial_genes".
 #'
 #' @export
-spatial_gene = function(st,coords,gene.list){
+spatial.gene = function(st,coords,gene.list){
   if(sum(! gene.list %in% rownames(st))>0){
     warning("Some genes are not in st. Such genes are ignored.")
   }
@@ -147,12 +154,19 @@ spatial_gene = function(st,coords,gene.list){
     toplot = cbind.data.frame(coords,st[genelist[i],])
     colnames(toplot) = c("x","y","expression")
     plots[[i]] = ggplot(toplot)+
-      geom_point(aes(x=x,y=y,color=expression),size=1)+
+      geom_point(aes(x=x,y=y,color=expression),size=4)+
       scale_color_gradient(low="#F5F5F5",high="blue")+
       labs(title = genelist[i])+
-      theme_classic()
+      theme_classic()+
+      theme(axis.title.x = element_text(size=20),
+            axis.title.y = element_text(size=20),
+            axis.text.x = element_text(size=15),
+            axis.text.y = element_text(size=15),
+            title = element_text(size=20),
+            legend.title = element_text(size=12),
+            legend.text = element_text(size=12))
   }
-  pdf("spatial_genes")
+  pdf("spatial_genes.pdf",width=7,height=6)
   invisible(lapply(plots, print))
   dev.off()
 }
