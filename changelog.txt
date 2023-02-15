@@ -1,3 +1,6 @@
 2023.1.16：
 - Added a new parameter, "normalize", into function "deconvoluting" to deal with bulk decovolution.
 ===================================
+2023.2.15：
+- Added a new function, "spatial.gene", to visualize the spatial expression profile.
+- Modified function "cell.type.weight".
