@@ -13,6 +13,9 @@ profile_comparison(ref, ests, barcodes = NULL)
 
 \item{barcodes}{(Optional) the barcodes of the cells whose profile is to compared. Default is all.}
 }
+\value{
+A pdf file named "profile_comparison".
+}
 \description{
 Comparison of the corrected and original profile.
 }

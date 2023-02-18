@@ -7,7 +7,7 @@
 coloc.network(corr, thresh, cell.type, annotations, ntypes, color = NULL, name)
 }
 \arguments{
-\item{corr}{Correlation matrix returned by \code{coloc.corr}}
+\item{corr}{Correlation matrix}
 
 \item{thresh}{Threshold of correlation coefficient. Value large than this value will be regarded as an edge.}
 
@@ -23,5 +23,5 @@ If \code{cell.type = F}, this should be the annotation of the single cells.}
 \item{name}{The name of this pdf file.}
 }
 \description{
-Draws a network to show colocalization of cells (cell types).
+This function draws a network to show colocalization of cells (cell types).
 }

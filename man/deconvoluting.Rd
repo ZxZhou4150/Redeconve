@@ -7,13 +7,15 @@
 deconvoluting(
   ref,
   st,
-  cell.names = NULL,
+  cellnames = NULL,
   genemode,
   gene.list,
   var_thresh = 0.025,
   exp_thresh = 0.03,
   hpmode,
   hp,
+  aver_cell,
+  normalize = T,
   thre = 1e-10,
   dopar = T,
   ncores,
@@ -26,7 +28,7 @@ deconvoluting(
 
 \item{st}{Spatial transcriptomics to be deconvoluted}
 
-\item{cell.names}{(optional) Cells(Cell types) to be used for deconvolution in reference.
+\item{cellnames}{(optional) Cells(Cell types) to be used for deconvolution in reference.
 If missing, all cells will be used.}
 
 \item{genemode}{Mode of genes to be included in deconvolution. Three modes are available: "\code{default}", using the intersect of \code{ref} and \code{st};
@@ -47,6 +49,10 @@ and selecting the optimal hyperparameter(may take a long time).}
 
 \item{hp}{If \code{hpmode = "customized"}, this will be the hyperparameter you want to use.}
 
+\item{aver_cell}{A priori number indicating the average cell number of one spot. This varies according to the platform.}
+
+\item{normalize}{Whether to normalize the reference or not. \code{TRUE} is the default value and is recommended when deconvoluting spatial transcriptomics.}
+
 \item{thre}{Threshold, numbers less than this value in the result will be regarded as zero.
 Default is \code{1e-10}.}
 
@@ -58,7 +64,7 @@ Default is \code{1e-10}.}
 \item{realtime}{Whether to write results into disk in real time.}
 }
 \value{
-A matrix, showing the number of estimated number of each cell(cell type) in each spot.
+A matrix, showing the number of estimated absolute abundance of each cell(cell type) in each spot.
 }
 \description{
 Processing deconvolution, getting the number of each reference cell(cell type)

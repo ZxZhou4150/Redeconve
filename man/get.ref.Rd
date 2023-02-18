@@ -18,7 +18,7 @@ will be calculated.}
 \value{
 A matrix showing the gene expression profile of each cell type,
 one row represents one cell type and one column represents one gene.
-This function will also write a global variable named \code{new.annotation},
+If there are cells missing annotations, this function will also write a global variable named \code{new.annotation},
 where cells missing annotation are labeled as "_Unknown".
 }
 \description{

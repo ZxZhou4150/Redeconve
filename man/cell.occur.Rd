@@ -9,6 +9,10 @@ cell.occur(nums)
 \arguments{
 \item{nums}{Results of \code{deconvoluting}.}
 }
+\value{
+This function will return a plot showing the occurrence of cells as well as a global variable named "occurred.cells"
+showing the names of the cells occurred.
+}
 \description{
 Plot of occurrences of each cell(cell type) in the whole spatial transcriptome.
 }
