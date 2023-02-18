@@ -175,7 +175,7 @@ spatial.gene = function(st,coords,gene.list){
 #'
 #' This function draws a network to show colocalization of cells (cell types).
 #'
-#' @param corr Correlation matrix returned by \code{coloc.corr}
+#' @param corr Correlation matrix
 #' @param thresh Threshold of correlation coefficient. Value large than this value will be regarded as an edge.
 #' @param cell.type Whether the result is by cell-type (\code{TRUE}) or by single-cell (\code{FALSE}).
 #' @param annotations If \code{cell.type = T}, this should be the names of the cell types.
@@ -183,7 +183,8 @@ spatial.gene = function(st,coords,gene.list){
 #' @param ntypes Number of cell types.
 #' @param color The colors of cell types. Default is \code{rainbow(ntypes)}.
 #' @param name The name of this pdf file.
-
+#'
+#' @export
 coloc.network=function(corr,thresh,cell.type,annotations,ntypes,color=NULL,name){
   diag(corr)=0
   g = graph_from_adjacency_matrix(corr>thresh,mode="undirected",weighted=T)
