@@ -76,12 +76,14 @@ sc2type = function(nums,annotations){
   typenums = matrix(nrow = ntypes, ncol = ncol(nums))
   rownames(typenums) = dimnames(tab)[[1]]
   colnames(typenums) = colnames(nums)
+  names(tab)=NULL
   begin=1
   for(i in 1:ntypes){
-    if(tab[i]==1)typenums[i,]=nums[begin,]
+    end = begin+tab[i]-1
+    if(tab[i]==1){
+      typenums[i,]=as.matrix(nums[begin,])
+    }
     else{
-      end = begin+tab[i]-1
-      names(end) = NULL
       typenums[i,] = apply(nums[begin:end,],2,sum)
     }
     begin = end+1
