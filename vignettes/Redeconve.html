@@ -467,17 +467,8 @@ disk in real time or not.</li>
 <p>For real time results, the result of each spot will be write into a
 separate csv file, whose name is the barcode of the spot.</p>
 </div>
-<div id="estimating-absolute-abundance" class="section level3">
-<h3>6. Estimating absolute abundance</h3>
-<p>Since our algorithm will normalize reference, parameter
-<code>aver_cell</code> is required to estimate the absolute abundance of
-each cell state. This value indicates the average number of cells in one
-spot. Users can determine it according to the platform of st data. For
-example, 10x Visium has a spot radius of about 50<span class="math inline">\(\mu\)</span>m, so this value for a 10x Visium
-dataset is about 10.</p>
-</div>
 <div id="other-parameters" class="section level3">
-<h3>7. Other parameters</h3>
+<h3>6. Other parameters</h3>
 <p>The left parameters are <code>cellnames</code>,
 <code>normalize</code> and <code>thre</code>.</p>
 <ul>
@@ -498,7 +489,7 @@ value.</li>
 </div>
 <div id="a-demo" class="section level3">
 <h3>A demo</h3>
-<p>Next I will use a demo to give an example of how to use this
+<p>Next we will use a demo to give an example of how to use this
 function.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## load the data</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#data(basic)</span></span>
@@ -557,27 +548,69 @@ rounds of deconvolution.</p>
 <!-- ## Dealing with large scRNA datasets -->
 <!-- Nowadays the scale of scRNA datasets are getting increasingly larger. Sometimes the reference cells can reach to sub-million or million level. Here we provide two ways to deal with this situation: -->
 <!-- 1. When proper annotations are available,  -->
+</div>
+<div id="seurat-interface" class="section level2">
+<h2>Seurat interface</h2>
+<p>This package does not directly provide Seurat interface. However, The
+input we need can be easily extracted from Seurat object:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># reference: raw count</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># pbmc: Seurat object example</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#sc = pbmc@assays$RNA@counts</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># spatial: count and coordinates</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># stxBrain: Seurat object example</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#st = stxBrain@assays$spatial@counts</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#coords = test@images$anterior1@coordinates[,c(&quot;row&quot;,&quot;col&quot;)]</span></span></code></pre></div>
 <hr />
 </div>
 <div id="downstream-analysis-and-visualization" class="section level2">
 <h2>Downstream analysis and visualization</h2>
 <p>Redeconve offers many built-in functions for downstream analysis and
 visualization.</p>
+<div id="gaining-interpretability" class="section level3">
+<h3>gaining interpretability</h3>
+<p>For we included a normalization procedure, the result of
+<code>deconvoluting</code> has only relative significance. Here are some
+functions related:</p>
+<ol style="list-style-type: decimal">
+<li><code>to.proportion</code>: This function converts the result to
+proportion, i.e., the sum of cell abundance per spot is 1. This is
+convenient for visualization.</li>
+</ol>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#prop = to.proportion(nums)</span></span></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li><code>to.absolute.abundance</code>: This function converts the
+result to absolute cell abundance with some priori knowledge. Parameter
+<code>aver.cell</code> is required to estimate the absolute abundance of
+each cell state. This value indicates the average number of cells in one
+spot. Users can determine it according to the platform of st data. For
+example, 10x Visium has a spot radius of about 50<span class="math inline">\(\mu\)</span>m, so this value for a 10x Visium
+dataset is about 10.</li>
+</ol>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ab = to.absolute.abundance(nums,aver.cell=10)</span></span></code></pre></div>
+<ol start="3" style="list-style-type: decimal">
+<li><code>sc2type</code>: This function converts single-cell result to
+cell-type result. Note that this function itself does not provide
+interpretability.</li>
+</ol>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#type_res = sc2type(res,annotations)</span></span></code></pre></div>
+</div>
 <div id="cell-occurrence" class="section level3">
 <h3>Cell occurrence</h3>
 <p>The function <code>cell.occur</code> shows the number of cells
 actually used in deconvolution, and the number of spots that every used
 cell occurs.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#cell.occur(res)</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#cell.occur(res)</span></span></code></pre></div>
 </div>
 <div id="find-cells-of-interest" class="section level3">
 <h3>Find cells of interest</h3>
 <p>Redeconve offers a function to highlight those cells with high
-average abundance and/or high variance. Users can then explore those
-cells. Note that this function can only be run after
-<code>cell.occur</code>, because it needs <code>occurred.cells</code> as
-input, which is an output of <code>cell.occur</code>.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#show.cellsofinterest(res, occurred.cells)</span></span></code></pre></div>
+average abundance and/or high coefficient of variation (sd/mean). Users
+can then explore those cells. Note that this function can only be run
+after <code>cell.occur</code>, because it needs
+<code>occurred.cells</code> as input, which is an output of
+<code>cell.occur</code>.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#show.cellsofinterest(res, occurred.cells)</span></span></code></pre></div>
 </div>
 <div id="abundance-of-all-or-some-specific-cells" class="section level3">
 <h3>Abundance of all or some specific cells</h3>
@@ -586,8 +619,8 @@ all cells (or cell types) or some cells you indicate. Here we want to
 plot the abundance of three T cells, so we set
 <code>cell.type = F</code> and <code>cellnames</code> as the names of
 cells we concern.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Tcells = c(&quot;T.cells...NK.cells.8&quot;,&quot;T.cells...NK.cells.11&quot;,&quot;T.cells...NK.cells.35&quot;)</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#cell.type.weight(res,F,cellnames=Tcells,coords=coords,name=&quot;Tcells.pdf&quot;)</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Tcells = c(&quot;T.cells...NK.cells.8&quot;,&quot;T.cells...NK.cells.11&quot;,&quot;T.cells...NK.cells.35&quot;)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#cell.type.weight(res,F,cellnames=Tcells,coords=coords,name=&quot;Tcells.pdf&quot;)</span></span></code></pre></div>
 <p>The output file, named “Tcells.pdf”, can be found under current
 directory.</p>
 </div>
@@ -595,15 +628,15 @@ directory.</p>
 <h3>Spatial pie chart</h3>
 <p>The function <code>spatial.pie</code> can plot the spatial pie chart,
 showing the proportion of each cell type in each spatial spot.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># For this is a demo, we use default colors</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This may take some time</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#spatial.piechart(res.ctmerge,coords)</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># For this is a demo, we use default colors</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This may take some time</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#spatial.piechart(res.ctmerge,coords)</span></span></code></pre></div>
 </div>
 <div id="spot-pie-chart" class="section level3">
 <h3>Spot pie chart</h3>
 <p>The function <code>spot.pie</code> can plot the proportion of each
 cell type within a certain spot.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#spot.pie(res[,&quot;X27x18&quot;],title=&quot;X27x18&quot;)</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#spot.pie(res[,&quot;X27x18&quot;],title=&quot;X27x18&quot;)</span></span></code></pre></div>
 </div>
 <div id="co-localization" class="section level3">
 <h3>Co-localization</h3>
@@ -611,14 +644,23 @@ cell type within a certain spot.</p>
 <code>coloc.corr</code> uses the correlation of cell abundance to infer
 co-localization, and <code>coloc.network</code> draws a network to
 visualize co-localization.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This function merges single cells to cell types</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#res.ctmerge = sc2type(res,annotations)</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#corr = coloc.corr(res.ctmerge,F,method=&quot;pearson&quot;)</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">#coloc.network()</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This function merges single cells to cell types</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">#res.ctmerge = sc2type(res,annotations)</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">#corr = coloc.corr(res.ctmerge,F,method=&quot;pearson&quot;)</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">#celltypes = levels(as.factor(annotations[,2]))</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">#coloc.network(corr,thre=0.4,cell.type=T,annotations=celltypes,ntypes=length(celltypes),name=&quot;colocalization_network.pdf&quot;)</span></span></code></pre></div>
 <p>The output file, named “colocalization_network.pdf”, can be found
 under current directory.</p>
+</div>
+<div id="spatial-expression-visualization" class="section level3">
+<h3>Spatial expression visualization</h3>
+<p>The function <code>spatial.gene</code> can visualize gene expression
+across spatial coordinates. This can help validate the distribution of
+some cells/cell states.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#gene.list = c(&quot;CD3D&quot;,&quot;CD3E&quot;,&quot;CD3G&quot;)</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#spatial.gene(st,coords,gene.list)</span></span></code></pre></div>
 </div>
 <div id="spatial-expression-profile-imputation-and-reference-correction" class="section level3">
 <h3>Spatial expression profile imputation and reference correction</h3>
@@ -627,14 +669,14 @@ cell state of cells in spatial spot would not be exactly the same with
 that in reference. Here Redeconve offers a function that solves both
 problems. The function <code>profile.correction</code> can do impitation
 as well as profile correction for a single spot.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ests = profile_correction(res[,&quot;X27x18&quot;],st[,&quot;X27x18&quot;],sc,ncores=8)</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ests = profile_correction(res[,&quot;X27x18&quot;],st[,&quot;X27x18&quot;],sc,ncores=8)</span></span></code></pre></div>
 <p>This is another quadratic programming problem: the goal is to let the
 corrected spatial expression higher than the observed (imputation). The
 return value is the “real” cell states in that spot after
 imputation.</p>
 <p>We can use the function <code>profile_comparison</code> to see the
 difference between reference and corrected expression profile:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#profile_comparison(sc,ests)</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#profile_comparison(sc,ests)</span></span></code></pre></div>
 </div>
 </div>
 

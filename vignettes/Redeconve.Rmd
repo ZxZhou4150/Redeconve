@@ -87,11 +87,7 @@ Even with parallel computing, some dataset is still time-consuming. Redeconve is
 
 For real time results, the result of each spot will be write into a separate csv file, whose name is the barcode of the spot.
 
-### 6. Estimating absolute abundance
-
-Since our algorithm will normalize reference, parameter `aver_cell` is required  to estimate the absolute abundance of each cell state. This value indicates the average number of cells in one spot. Users can determine it according to the platform of st data. For example, 10x Visium has a spot radius of about 50$\mu$m, so this value for a 10x Visium dataset is about 10.
-
-### 7. Other parameters
+### 6. Other parameters
 
 The left parameters are `cellnames`, `normalize` and `thre`.
 
@@ -101,7 +97,7 @@ The left parameters are `cellnames`, `normalize` and `thre`.
 
 ### A demo
 
-Next I will use a demo to give an example of how to use this function.
+Next we will use a demo to give an example of how to use this function.
 
 ```{r}
 ## load the data
@@ -153,11 +149,48 @@ For the main function, every thing is the same. Here we set `hpmode` as `"autose
 
 <!-- 1. When proper annotations are available,  -->
 
+## Seurat interface
+
+This package does not directly provide Seurat interface. However, The input we need can be easily extracted from Seurat object:
+```{r}
+# reference: raw count
+# pbmc: Seurat object example
+#sc = pbmc@assays$RNA@counts
+
+# spatial: count and coordinates
+# stxBrain: Seurat object example
+#st = stxBrain@assays$spatial@counts
+#coords = test@images$anterior1@coordinates[,c("row","col")]
+
+```
+
 ------------------------------------------------------------------------
 
 ## Downstream analysis and visualization
 
 Redeconve offers many built-in functions for downstream analysis and visualization.
+
+### gaining interpretability
+
+For we included a normalization procedure, the result of `deconvoluting` has only relative significance. Here are some functions related:
+
+1.  `to.proportion`: This function converts the result to proportion, i.e., the sum of cell abundance per spot is 1. This is convenient for visualization.
+
+```{r}
+#prop = to.proportion(nums)
+```
+
+2.  `to.absolute.abundance`: This function converts the result to absolute cell abundance with some priori knowledge. Parameter `aver.cell` is required to estimate the absolute abundance of each cell state. This value indicates the average number of cells in one spot. Users can determine it according to the platform of st data. For example, 10x Visium has a spot radius of about 50$\mu$m, so this value for a 10x Visium dataset is about 10.
+
+```{r}
+#ab = to.absolute.abundance(nums,aver.cell=10)
+```
+
+3.  `sc2type`: This function converts single-cell result to cell-type result. Note that this function itself does not provide interpretability.
+
+```{r}
+#type_res = sc2type(res,annotations)
+```
 
 ### Cell occurrence
 
@@ -169,7 +202,7 @@ The function `cell.occur` shows the number of cells actually used in deconvoluti
 
 ### Find cells of interest
 
-Redeconve offers a function to highlight those cells with high average abundance and/or high variance. Users can then explore those cells. Note that this function can only be run after `cell.occur`, because it needs `occurred.cells` as input, which is an output of `cell.occur`.
+Redeconve offers a function to highlight those cells with high average abundance and/or high coefficient of variation (sd/mean). Users can then explore those cells. Note that this function can only be run after `cell.occur`, because it needs `occurred.cells` as input, which is an output of `cell.occur`.
 
 ```{r}
 #show.cellsofinterest(res, occurred.cells)
@@ -177,7 +210,7 @@ Redeconve offers a function to highlight those cells with high average abundance
 
 ### Abundance of all or some specific cells
 
-The function `cell.type.weight` can plot the abundance of all cells (or cell types) or some cells you indicate.  Here we want to plot the abundance of three T cells, so we set `cell.type = F` and `cellnames` as the names of cells we concern.
+The function `cell.type.weight` can plot the abundance of all cells (or cell types) or some cells you indicate. Here we want to plot the abundance of three T cells, so we set `cell.type = F` and `cellnames` as the names of cells we concern.
 
 ```{r}
 #Tcells = c("T.cells...NK.cells.8","T.cells...NK.cells.11","T.cells...NK.cells.35")
@@ -214,10 +247,20 @@ Redeconve offers two main functions to explore co-localization. `coloc.corr` use
 
 #corr = coloc.corr(res.ctmerge,F,method="pearson")
 
-#coloc.network()
+#celltypes = levels(as.factor(annotations[,2]))
+#coloc.network(corr,thre=0.4,cell.type=T,annotations=celltypes,ntypes=length(celltypes),name="colocalization_network.pdf")
 ```
 
 The output file, named "colocalization_network.pdf", can be found under current directory.
+
+### Spatial expression visualization
+
+The function `spatial.gene` can visualize gene expression across spatial coordinates. This can help validate the distribution of some cells/cell states.
+
+```{r}
+#gene.list = c("CD3D","CD3E","CD3G")
+#spatial.gene(st,coords,gene.list)
+```
 
 
 ### Spatial expression profile imputation and reference correction
