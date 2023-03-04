@@ -59,37 +59,6 @@ cell.occur = function(nums){
 #'           axis.text.y = element_blank())
 #' }
 
-#' Converting single cell results to type results
-#'
-#' This function converts single-cell abundance to cell-type abundance.
-#'
-#' @param nums The results of single-cell resolution
-#' @param annotations The annotation of the single cells.
-#'
-#' @export
-sc2type = function(nums,annotations){
-  ord = order(annotations[,2])
-  annotations = annotations[ord,]
-  tab = table(annotations[,2])
-  nums = nums[ord,]
-  ntypes = dim(tab)
-  typenums = matrix(nrow = ntypes, ncol = ncol(nums))
-  rownames(typenums) = dimnames(tab)[[1]]
-  colnames(typenums) = colnames(nums)
-  names(tab)=NULL
-  begin=1
-  for(i in 1:ntypes){
-    end = begin+tab[i]-1
-    if(tab[i]==1){
-      typenums[i,]=as.matrix(nums[begin,])
-    }
-    else{
-      typenums[i,] = apply(nums[begin:end,],2,sum)
-    }
-    begin = end+1
-  }
-  return(typenums)
-}
 
 #' Plot of weights for each cell type
 #'
