@@ -4,3 +4,9 @@
 2023.2.15：
 - Added a new function, "spatial.gene", to visualize the spatial expression profile.
 - Modified function "cell.type.weight".
+===================================
+2023.3.4 :
+- Adding a module, "gaining intepretabilitiy", including two functions: "to.proportion" and "to.absolute abundance".
+  Meanwhile removing parameter "aver_cell" from "deconvoluting".
+- Edited "show.cellsofinterest", which now shows mean vs. coefficient of variation.
+- Complemented Redeconve manual.
