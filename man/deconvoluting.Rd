@@ -14,7 +14,6 @@ deconvoluting(
   exp_thresh = 0.03,
   hpmode,
   hp,
-  aver_cell,
   normalize = T,
   thre = 1e-10,
   dopar = T,
@@ -48,8 +47,6 @@ setting the hyperparameter yourself; "\code{autoselection}", automatically calcu
 and selecting the optimal hyperparameter(may take a long time).}
 
 \item{hp}{If \code{hpmode = "customized"}, this will be the hyperparameter you want to use.}
-
-\item{aver_cell}{A priori number indicating the average cell number of one spot. This varies according to the platform.}
 
 \item{normalize}{Whether to normalize the reference or not. \code{TRUE} is the default value and is recommended when deconvoluting spatial transcriptomics.}
 
