@@ -142,9 +142,9 @@ spatial.gene = function(st,coords,gene.list){
   dev.off()
 }
 
-#' Visualization of colocalization
+#' Colocalization network
 #'
-#' This function draws a network to show colocalization of cells (cell types).
+#' This function gains an igraph network to show colocalization of cells (cell types).
 #'
 #' @param corr Correlation matrix
 #' @param thresh Threshold of correlation coefficient. Value large than this value will be regarded as an edge.
@@ -153,22 +153,19 @@ spatial.gene = function(st,coords,gene.list){
 #' If \code{cell.type = F}, this should be the annotation of the single cells.
 #' @param ntypes Number of cell types.
 #' @param color The colors of cell types. Default is \code{rainbow(ntypes)}.
-#' @param name The name of this pdf file.
+#'
+#' @return An "igraph" object
 #'
 #' @export
-coloc.network=function(corr,thresh,cell.type,annotations,ntypes,color=NULL,name){
+coloc.network=function(corr,thresh,cell.type,annotations,ntypes,color=NULL){
   diag(corr)=0
   g = graph_from_adjacency_matrix(corr>thresh,mode="undirected",weighted=T)
-  V(g)$annotations = annotations[,2]
+  if(cell.type==F)V(g)$annotations = annotations[,2]
+  else(V(g)$annotations = annotations)
   if(length(color)==0)color = grDevices::rainbow(ntypes)
   V(g)$color = color[factor(V(g)$annotations)]
   deg = degree(g,mode = "all")
-  ncells = nrow(corr)
-  if(!dir.exists(dir))dir.create(dir)
-  pdf(file.path(dir, name))
-  plot(g,vertex.frame.color="white",vertex.size=100/ncells*deg,vertex.label.cex=0.2,layout=layout_with_fr,edge.width=0.2)
-  legend(x=-1.5,y=1.5,levels(factor(V(g)$annotations)),pch=21,col="#777777",pt.bg=color,cex=0.5)
-  dev.off()
+  return(g)
 }
 
 #' This is the CARD function

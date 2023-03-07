@@ -239,7 +239,7 @@ The function `spot.pie` can plot the proportion of each cell type within a certa
 
 ### Co-localization
 
-Redeconve offers two main functions to explore co-localization. `coloc.corr` uses the correlation of cell abundance to infer co-localization, and `coloc.network` draws a network to visualize co-localization.
+Redeconve offers two main functions to explore co-localization. `coloc.corr` uses the correlation of cell abundance to infer co-localization, and `coloc.network` gains a network to visualize co-localization.
 
 ```{r}
 # This function merges single cells to cell types
@@ -248,10 +248,9 @@ Redeconve offers two main functions to explore co-localization. `coloc.corr` use
 #corr = coloc.corr(res.ctmerge,F,method="pearson")
 
 #celltypes = levels(as.factor(annotations[,2]))
-#coloc.network(corr,thre=0.4,cell.type=T,annotations=celltypes,ntypes=length(celltypes),name="colocalization_network.pdf")
+#g = coloc.network(corr,thre=0.4,cell.type=T,annotations=celltypes,ntypes=length(celltypes))
+#plot(g)
 ```
-
-The output file, named "colocalization_network.pdf", can be found under current directory.
 
 ### Spatial expression visualization
 

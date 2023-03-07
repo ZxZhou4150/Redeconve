@@ -10,3 +10,6 @@
   Meanwhile removing parameter "aver_cell" from "deconvoluting".
 - Edited "show.cellsofinterest", which now shows mean vs. coefficient of variation.
 - Complemented Redeconve manual.
+===================================
+2023.3.7 :
+- Edited "coloc.network"
