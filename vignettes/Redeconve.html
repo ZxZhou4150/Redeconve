@@ -551,16 +551,16 @@ rounds of deconvolution.</p>
 </div>
 <div id="seurat-interface" class="section level2">
 <h2>Seurat interface</h2>
-<p>This package does not directly provide Seurat interface. However, The
-input we need can be easily extracted from Seurat object:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># reference: raw count</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># pbmc: Seurat object example</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#sc = pbmc@assays$RNA@counts</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># spatial: count and coordinates</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># stxBrain: Seurat object example</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#st = stxBrain@assays$spatial@counts</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#coords = test@images$anterior1@coordinates[,c(&quot;row&quot;,&quot;col&quot;)]</span></span></code></pre></div>
+<p>This package provided two functions to extract information from
+Seurat object to satisfy Redeconve’s input:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">## sc</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#sclist = extract.seurat.sc(pbmc3k,anno_slot=&quot;seurat_annotation&quot;)</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="do">## st</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#stlist = extract.seurat.st(stxBrain,coord_slot=&quot;anterior1&quot;)</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="do">## just for example</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#res = deconvoluting(sclist[[&quot;expr&quot;]],stlist[[&quot;expr&quot;],genemode=&quot;filt&quot;,hpmode=&quot;auto&quot;,dopar=T,ncores=8)</span></span></code></pre></div>
 <hr />
 </div>
 <div id="downstream-analysis-and-visualization" class="section level2">

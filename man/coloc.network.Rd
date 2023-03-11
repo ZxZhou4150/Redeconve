@@ -2,9 +2,9 @@
 % Please edit documentation in R/plots.R
 \name{coloc.network}
 \alias{coloc.network}
-\title{Visualization of colocalization}
+\title{Colocalization network}
 \usage{
-coloc.network(corr, thresh, cell.type, annotations, ntypes, color = NULL, name)
+coloc.network(corr, thresh, cell.type, annotations, ntypes, color = NULL)
 }
 \arguments{
 \item{corr}{Correlation matrix}
@@ -19,9 +19,10 @@ If \code{cell.type = F}, this should be the annotation of the single cells.}
 \item{ntypes}{Number of cell types.}
 
 \item{color}{The colors of cell types. Default is \code{rainbow(ntypes)}.}
-
-\item{name}{The name of this pdf file.}
+}
+\value{
+An "igraph" object
 }
 \description{
-This function draws a network to show colocalization of cells (cell types).
+This function gains an igraph network to show colocalization of cells (cell types).
 }

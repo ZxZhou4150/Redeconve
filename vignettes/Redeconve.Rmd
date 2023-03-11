@@ -151,17 +151,16 @@ For the main function, every thing is the same. Here we set `hpmode` as `"autose
 
 ## Seurat interface
 
-This package does not directly provide Seurat interface. However, The input we need can be easily extracted from Seurat object:
+This package provided two functions to extract information from Seurat object to satisfy Redeconve's input:
 ```{r}
-# reference: raw count
-# pbmc: Seurat object example
-#sc = pbmc@assays$RNA@counts
+## sc
+#sclist = extract.seurat.sc(pbmc3k,anno_slot="seurat_annotation")
 
-# spatial: count and coordinates
-# stxBrain: Seurat object example
-#st = stxBrain@assays$spatial@counts
-#coords = test@images$anterior1@coordinates[,c("row","col")]
+## st
+#stlist = extract.seurat.st(stxBrain,coord_slot="anterior1")
 
+## just for example
+#res = deconvoluting(sclist[["expr"]],stlist[["expr"],genemode="filt",hpmode="auto",dopar=T,ncores=8)
 ```
 
 ------------------------------------------------------------------------

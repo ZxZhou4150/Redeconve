@@ -487,3 +487,37 @@ solveqp2 = function(y,num,ref,ncells){
   return(t(result[["solution"]]))
 }
 
+#' Seurat interface 1
+#'
+#' Seurat interface for single-cell transcriptomics
+#'
+#' @param sc_seu Seurat object of single-cell transcriptomics
+#' @param anno_slot Character, name of slot storing annotations information, under "meta.data" slot.
+#'
+#' @return A list, containing single-cell expression matrix and annotations.
+#'
+#' @export
+extract.seurat.sc = function(sc_seu, anno_slot){
+  sc = list()
+  sc[["expr"]] = sc_seu@assays$RNA@counts
+  sc[["annotations"]] = eval(parse(text=paste0(substitute(sc_seu),"$",anno_slot)))
+  return(sc)
+}
+
+#' Seurat interface 2
+#'
+#' Seurat interface for spatial transcriptomics
+#'
+#' @param sc_seu Seurat object of spatial transcriptomics
+#' @param coord_slot Character, name of slot storing annotations information, under "image" slot. Default is "image".
+#'
+#' @return A list, containing single-cell expression matrix and annotations.
+#'
+#' @export
+extract.seurat.st = function(st_seu, coord_slot="image"){
+  st = list()
+  st[["expr"]] = st_seu@assays$Spatial@counts
+  coords = eval(parse(text=paste0(substitute(st_seu),"@images$",coord_slot,"@coordinates")))
+  st[["coords"]] = as.matrix(coords[,2:3])
+  return(st)
+}
