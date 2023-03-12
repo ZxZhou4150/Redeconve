@@ -7,7 +7,7 @@
 cell.occur(nums)
 }
 \arguments{
-\item{nums}{Results of \code{deconvoluting}.}
+\item{nums}{Estimated cell numbers.}
 }
 \value{
 This function will return a plot showing the occurrence of cells as well as a global variable named "occurred.cells"
