@@ -13,3 +13,6 @@
 ===================================
 2023.3.7 :
 - Edited "coloc.network"
+===================================
+2023.3.12 :
+- Edited "cell.type.weight", which now named as "spatial.cell.number".

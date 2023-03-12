@@ -614,13 +614,12 @@ after <code>cell.occur</code>, because it needs
 </div>
 <div id="abundance-of-all-or-some-specific-cells" class="section level3">
 <h3>Abundance of all or some specific cells</h3>
-<p>The function <code>cell.type.weight</code> can plot the abundance of
-all cells (or cell types) or some cells you indicate. Here we want to
-plot the abundance of three T cells, so we set
-<code>cell.type = F</code> and <code>cellnames</code> as the names of
-cells we concern.</p>
+<p>The function <code>spatial.cell.number</code> can plot the abundance
+of all cells (or cell types) or some cells you indicate. Here we want to
+plot the abundance of three T cells, so we set <code>cellnames</code> as
+the names of cells we concern.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Tcells = c(&quot;T.cells...NK.cells.8&quot;,&quot;T.cells...NK.cells.11&quot;,&quot;T.cells...NK.cells.35&quot;)</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#cell.type.weight(res,F,cellnames=Tcells,coords=coords,name=&quot;Tcells.pdf&quot;)</span></span></code></pre></div>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#spatial.cell.number(res,cellnames=Tcells,coords=coords,name=&quot;Tcells.pdf&quot;)</span></span></code></pre></div>
 <p>The output file, named “Tcells.pdf”, can be found under current
 directory.</p>
 </div>

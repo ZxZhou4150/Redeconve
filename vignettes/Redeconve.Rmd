@@ -209,11 +209,11 @@ Redeconve offers a function to highlight those cells with high average abundance
 
 ### Abundance of all or some specific cells
 
-The function `cell.type.weight` can plot the abundance of all cells (or cell types) or some cells you indicate. Here we want to plot the abundance of three T cells, so we set `cell.type = F` and `cellnames` as the names of cells we concern.
+The function `spatial.cell.number` can plot the abundance of all cells (or cell types) or some cells you indicate. Here we want to plot the abundance of three T cells, so we set `cellnames` as the names of cells we concern.
 
 ```{r}
 #Tcells = c("T.cells...NK.cells.8","T.cells...NK.cells.11","T.cells...NK.cells.35")
-#cell.type.weight(res,F,cellnames=Tcells,coords=coords,name="Tcells.pdf")
+#spatial.cell.number(res,cellnames=Tcells,coords=coords,name="Tcells.pdf")
 ```
 
 The output file, named "Tcells.pdf", can be found under current directory.
