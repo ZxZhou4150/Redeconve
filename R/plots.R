@@ -82,7 +82,7 @@ spatial.cell.number = function(nums,cell.names=NULL,coords,name){
     colnames(toplot) = c("x","y","number")
     plots[[i]] = ggplot(toplot)+
       geom_point(aes(x=x,y=y,color=number),size=4)+
-      scale_color_gradient(limits=c(0,1),low="#F5F5F5",high="blue")+
+      scale_color_gradient(low="#F5F5F5",high="blue")+
       labs(title = cells[i])+
       theme_classic()+
       theme(axis.title.x = element_text(size=20),
