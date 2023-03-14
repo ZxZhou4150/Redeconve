@@ -201,7 +201,7 @@ The function `cell.occur` shows the number of cells actually used in deconvoluti
 
 ### Find cells of interest
 
-Redeconve offers a function to highlight those cells with high average abundance and/or high coefficient of variation (sd/mean). Users can then explore those cells. Note that this function can only be run after `cell.occur`, because it needs `occurred.cells` as input, which is an output of `cell.occur`.
+Redeconve offers a function to plot mean vs sd, and highlighting those outliers. Users can then explore those cells. Note that this function can only be run after `cell.occur`, because it needs `occurred.cells` as input, which is an output of `cell.occur`.
 
 ```{r}
 #show.cellsofinterest(res, occurred.cells)
