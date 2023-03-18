@@ -32,7 +32,6 @@
 #' @export
 deconvoluting = function(ref, st, cellnames=NULL, genemode, gene.list, var_thresh=0.025, exp_thresh=0.03, hpmode, hp, normalize=T, thre=1e-10, dopar=T, ncores, realtime=F, dir=NULL){
   if((dopar==T) & (missing(ncores))){stop("Parameter \"ncores\" is required to avoid latent errors.")}
-  if(missing(aver_cell)){stop("Average number of cells not indicated")}
   ref = as.matrix(ref); st = as.matrix(st)
   if(!is.null(cellnames)){
     ncells = length(cellnames)
@@ -269,7 +268,7 @@ to.proportion = function(res){
 #' where cells missing annotation are labeled as "_Unknown".
 #'
 #' @export
-get.ref = function(sc,annotations,gene.list = NULL){
+get.ref = function(sc,annotations,gene.list = NULL){ ##需要改进
   cl = class(sc)
   if(!(cl %in% c("dgCMatrix","dgTMatrix","dgRMatrix")))sc = as(sc,"dgCMatrix")
   if(!is.null(gene.list))sc = sc[gene.list,]
