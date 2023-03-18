@@ -17,5 +17,8 @@
 2023.3.12 :
 - Edited "cell.type.weight", which now named as "spatial.cell.number".
 ===================================
+2023.3.18 :
+- Edited "get.ref".
+===================================
 2023.3.14 :
 - Edited "show.cellsofinterest"

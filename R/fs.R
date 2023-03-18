@@ -257,7 +257,7 @@ to.proportion = function(res){
 #' this function can calculate the average expression of genes within all cells
 #' of every cell type.
 #'
-#' @param sc Raw scRNA-seq data.
+#' @param sc Raw scRNA-seq data. Note that colnames of sc must be cell barcodes.
 #' @param annotations A \code{data.frame} with 2 columns: the first column should be barcodes,
 #' the second column should be the corresponding cell type.
 #' @param gene.list (optional) Genes to be calculated. If missing, all genes
@@ -270,7 +270,8 @@ to.proportion = function(res){
 #'
 #' @export
 get.ref = function(sc,annotations,gene.list = NULL){
-  sc = as(sc,"dgCMatrix")
+  cl = class(sc)
+  if(!(cl %in% c("dgCMatrix","dgTMatrix","dgRMatrix")))sc = as(sc,"dgCMatrix")
   if(!is.null(gene.list))sc = sc[gene.list,]
   ngenes=nrow(sc)
   barcodes=colnames(sc)

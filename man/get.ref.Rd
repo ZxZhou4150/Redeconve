@@ -7,7 +7,7 @@
 get.ref(sc, annotations, gene.list = NULL)
 }
 \arguments{
-\item{sc}{Raw scRNA-seq data.}
+\item{sc}{Raw scRNA-seq data. Note that colnames of sc must be cell barcodes.}
 
 \item{annotations}{A \code{data.frame} with 2 columns: the first column should be barcodes,
 the second column should be the corresponding cell type.}
