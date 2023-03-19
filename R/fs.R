@@ -264,49 +264,59 @@ to.proportion = function(res){
 #'
 #' @return A matrix showing the gene expression profile of each cell type,
 #' one row represents one cell type and one column represents one gene.
-#' If there are cells missing annotations, this function will also write a global variable named `new.annotation`,
-#' where cells missing annotation are labeled as "_Unknown".
 #'
 #' @export
-get.ref = function(sc,annotations,gene.list = NULL){ ##需要改进
+get.ref = function(sc,annotations,gene.list = NULL,dopar=T,ncores){
+  barcodes=colnames(sc)
+  shared=intersect(barcodes,annotations[,1])
+  ncells=length(barcodes)
+  if(length(shared)<ncells){
+    stop("There are cells missing annotation.")
+  }
   cl = class(sc)
-  if(!(cl %in% c("dgCMatrix","dgTMatrix","dgRMatrix")))sc = as(sc,"dgCMatrix")
+  sc = as(sc,"dgCMatrix")
   if(!is.null(gene.list))sc = sc[gene.list,]
   ngenes=nrow(sc)
-  barcodes=colnames(sc)
-  ncells=length(barcodes)
-  shared=intersect(barcodes,annotations[,1])
-  if(length(shared)<ncells){
-    warning("There are cells missing annotation. Labeled as '_Unknown'.")
-  }
-  new.annotation=as.matrix(matrix(nrow=ncells,ncol=1))
-  for(i in 1:ncells){
-    idx=which(annotations[,1]==barcodes[i])
-    if(length(idx)==0){
-      new.annotation[i,1]="_Unknown"
+  if(dopar==F){
+    ords = order(annotations[,2])
+    annotation = annotations[ords,2]
+    tab = table(annotation)
+    sc = sc[,ords]
+    ntypes=length(tab)
+    ref=matrix(nrow=ngenes,ncol=ntypes)
+    rownames(ref)=rownames(sc)
+    colnames(ref)=dimnames(tab)[[1]]
+    begin=1
+    for(i in 1:ntypes){
+      if(tab[i]==1)ref[,i]=sc[,begin]
+      else{
+        end = begin+tab[i]-1
+        names(end) = NULL
+        ref[,i] = apply(sc[,begin:end],1,mean)
+      }
+      begin = end+1
     }
-    else{new.annotation[i,1]=annotations[i,2]}
   }
-  ords = order(new.annotation)
-  new.annotation = new.annotation[ords,]
-  tab = table(new.annotation)
-  sc = sc[,ords]
-  ntypes=length(tab)
-  ref=matrix(nrow=ngenes,ncol=ntypes)
-  rownames(ref)=rownames(sc)
-  colnames(ref)=dimnames(tab)[[1]]
-  begin=1
-  for(i in 1:ntypes){
-    if(tab[i]==1)ref[,i]=sc[,begin]
-    else{
-      end = begin+tab[i]-1
-      names(end) = NULL
-      ref[,i] = apply(sc[,begin:end],1,mean)
+  else{
+    if(missing(ncores))stop("Parameter \"ncores\" is required to avoid latent errors.")
+    cts = levels(as.factor(annotations[,2]))
+    ntypes = length(cts)
+    cl = snow::makeCluster(ncores)
+    doSNOW::registerDoSNOW(cl)
+    print("Getting cell type expression profile ...")
+    pb = txtProgressBar(max = ncells, style = 3)
+    progress = function(n) setTxtProgressBar(pb, n)
+    opts = list(progress = progress)
+    cellcounts = as.matrix(table(annotations[,2]))
+    ref = foreach::foreach(i=1:ncells,.combine="+",.inorder=F,.options.snow = opts,.packages = "Matrix") %dopar% {
+      ref = matrix(data=0,nrow=ngenes,ncol=ntypes)
+      ct = which(cts==annotations[i,2])
+      ref[,ct] = ref[,ct] + sc[,i]
+      return(ref)
     }
-    begin = end+1
-  }
-  if(length(shared)<ncells){
-    new.annotation <<- cbind.data.frame(colnames(sc),new.annotation)
+    close(pb)
+    snow::stopCluster(cl)
+    ref = t(apply(ref,1,function(x){x/cellcounts}))
   }
   return(ref)
 }

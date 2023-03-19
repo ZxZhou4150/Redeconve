@@ -4,7 +4,7 @@
 \alias{get.ref}
 \title{Getting the gene expression profile of each cell type.}
 \usage{
-get.ref(sc, annotations, gene.list = NULL)
+get.ref(sc, annotations, gene.list = NULL, dopar = T, ncores)
 }
 \arguments{
 \item{sc}{Raw scRNA-seq data. Note that colnames of sc must be cell barcodes.}
@@ -18,8 +18,6 @@ will be calculated.}
 \value{
 A matrix showing the gene expression profile of each cell type,
 one row represents one cell type and one column represents one gene.
-If there are cells missing annotations, this function will also write a global variable named \code{new.annotation},
-where cells missing annotation are labeled as "_Unknown".
 }
 \description{
 If you want to use the gene expression profile of each cell type as reference,
