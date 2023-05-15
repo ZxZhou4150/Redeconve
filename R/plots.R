@@ -34,30 +34,29 @@ cell.occur = function(nums){
   return(p)
 }
 
-#' #' Heatmap of any correlation
-#' #'
-#' #' This function
-#' #'
-#' #' @param x The data whose correlation will be calculated and visualized. One column represents one variable.
-#' #' @param group
-#' #' @param method Method of calculating correlation coefficient.
-#' #'
-#' #' @return A global variable named "corr", represents for correlation of cell type
-#' #' proportion across spatial locations and its visualization.
-#' #'
-#' #' @export
-#' corr.heatmap = function(x, group, method = c("pearson","spearman")){
-#'   x = as.matrix(x)
-#'   corr <<- Hmisc::rcorr(x,type=method)[["r"]]
-#'   corrtp = reshape2::melt(corr)
-#'   ggplot(corrtp,aes(x=Var1,y=Var2,fill=value))+
-#'     geom_tile()+
-#'     scale_fill_gradient2(low="White", high="Blue")+
-#'     labs(x=NULL,y=NULL,title = "correlation")+
+# #' Heatmap of any correlation
+# #'
+# #' This function
+# #'
+# #' @param x The data whose correlation will be calculated and visualized. One column represents one variable.
+# #' @param group
+# #' @param method Method of calculating correlation coefficient.
+# #'
+# #' @return A global variable named "corr", represents for correlation of cell type
+# #' proportion across spatial locations and its visualization.
+# #'
+# #' @export
+# corr.heatmap = function(x, group, method = c("pearson","spearman")){
+#   x = as.matrix(x)
+#   corr <<- Hmisc::rcorr(x,type=method)[["r"]]
+#   corrtp = reshape2::melt(corr)
+#   ggplot(corrtp,aes(x=Var1,y=Var2,fill=value))+
+#     geom_tile()+
+#     scale_fill_gradient2(low="White", high="Blue")+
+#     labs(x=NULL,y=NULL,title = "correlation")+
 #'     theme_bw(base_size = 15)+
-#'     theme(axis.text.x = element_blank(),
-#'           axis.text.y = element_blank())
-#' }
+#     theme(axis.text.x = element_blank(),
+#           axis.text.y = element_blank())
 
 
 #' Plot of numbers for each given cell/cell type
@@ -68,10 +67,11 @@ cell.occur = function(nums){
 #' @param cell.names Name of cells (or cell types) to be plotted. Default is all.
 #' @param coords Coordinates of spatial spots. \code{rownames} should be the barcode(name) of each spot
 #' and \code{colnames} should be "x" and "y".
+#' @param size Size of spot. Default is 1.
 #' @param name The name of this pdf file.
 #'
 #' @export
-spatial.cell.number = function(nums,cell.names=NULL,coords,name){
+spatial.cell.number = function(nums,cell.names=NULL,coords,size=1,name){
   if(length(cell.names)!=0) nums = nums[cell.names,]
   ncells = nrow(nums)
   plots = vector(mode = "list",length = ncells)
@@ -81,7 +81,7 @@ spatial.cell.number = function(nums,cell.names=NULL,coords,name){
     toplot = cbind.data.frame(coords,number)
     colnames(toplot) = c("x","y","number")
     plots[[i]] = ggplot(toplot)+
-      geom_point(aes(x=x,y=y,color=number),size=4)+
+      geom_point(aes(x=x,y=y,color=number),size=size)+
       scale_color_gradient(low="#F5F5F5",high="blue")+
       labs(title = cells[i])+
       theme_classic()+
@@ -105,11 +105,12 @@ spatial.cell.number = function(nums,cell.names=NULL,coords,name){
 #' @param st Spatial transcriptomics.
 #' @param coords Coordinates of spatial spots.
 #' @param gene.list List of genes.
+#' @param size Size of spot. Default is 1.
 #'
 #' @return A pdf file named "spatial_genes".
 #'
 #' @export
-spatial.gene = function(st,coords,gene.list){
+spatial.gene = function(st,coords,gene.list,size=1){
   if(sum(! gene.list %in% rownames(st))>0){
     warning("Some genes are not in st. Such genes are ignored.")
   }
@@ -120,7 +121,7 @@ spatial.gene = function(st,coords,gene.list){
     toplot = cbind.data.frame(coords,st[genelist[i],])
     colnames(toplot) = c("x","y","expression")
     plots[[i]] = ggplot(toplot)+
-      geom_point(aes(x=x,y=y,color=expression),size=4)+
+      geom_point(aes(x=x,y=y,color=expression),size=size)+
       scale_color_gradient(low="#F5F5F5",high="blue")+
       labs(title = genelist[i])+
       theme_classic()+
