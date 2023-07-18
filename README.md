@@ -23,5 +23,3 @@ You may also set `build_vignettes` as `T`, but it may take some time to build th
 ```{r}
 browseVignettes("Redeconve")
 ```
-
-[test](https://gfdsggafg.github.io/poems/that_good_night.html)
