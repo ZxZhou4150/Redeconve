@@ -4,7 +4,7 @@
 \alias{spatial.gene}
 \title{Spatial expression}
 \usage{
-spatial.gene(st, coords, gene.list)
+spatial.gene(st, coords, gene.list, size = 1)
 }
 \arguments{
 \item{st}{Spatial transcriptomics.}
@@ -12,6 +12,8 @@ spatial.gene(st, coords, gene.list)
 \item{coords}{Coordinates of spatial spots.}
 
 \item{gene.list}{List of genes.}
+
+\item{size}{Size of spot. Default is 1.}
 }
 \value{
 A pdf file named "spatial_genes".

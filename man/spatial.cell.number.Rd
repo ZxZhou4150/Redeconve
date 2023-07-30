@@ -2,33 +2,10 @@
 % Please edit documentation in R/plots.R
 \name{spatial.cell.number}
 \alias{spatial.cell.number}
-\title{#' Heatmap of any correlation
-#'
-#' This function
-#'
-#' @param x The data whose correlation will be calculated and visualized. One column represents one variable.
-#' @param group
-#' @param method Method of calculating correlation coefficient.
-#'
-#' @return A global variable named "corr", represents for correlation of cell type
-#' proportion across spatial locations and its visualization.
-#'
-#' @export
-corr.heatmap = function(x, group, method = c("pearson","spearman")){
-x = as.matrix(x)
-corr <<- Hmisc::rcorr(x,type=method)[\link{"r"}]
-corrtp = reshape2::melt(corr)
-ggplot(corrtp,aes(x=Var1,y=Var2,fill=value))+
-geom_tile()+
-scale_fill_gradient2(low="White", high="Blue")+
-labs(x=NULL,y=NULL,title = "correlation")+
-theme_bw(base_size = 15)+
-theme(axis.text.x = element_blank(),
-axis.text.y = element_blank())
-}
+\title{theme_bw(base_size = 15)+
 Plot of numbers for each given cell/cell type}
 \usage{
-spatial.cell.number(nums, cell.names = NULL, coords, name)
+spatial.cell.number(nums, cell.names = NULL, coords, size = 1, name)
 }
 \arguments{
 \item{nums}{Estimated cell numbers.}
@@ -37,6 +14,8 @@ spatial.cell.number(nums, cell.names = NULL, coords, name)
 
 \item{coords}{Coordinates of spatial spots. \code{rownames} should be the barcode(name) of each spot
 and \code{colnames} should be "x" and "y".}
+
+\item{size}{Size of spot. Default is 1.}
 
 \item{name}{The name of this pdf file.}
 }
