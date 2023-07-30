@@ -273,7 +273,6 @@ get.ref = function(sc,annotations,gene.list = NULL,dopar=T,ncores){
   if(length(shared)<ncells){
     stop("There are cells missing annotation.")
   }
-  cl = class(sc)
   sc = as(sc,"dgCMatrix")
   if(!is.null(gene.list))sc = sc[gene.list,]
   ngenes=nrow(sc)
@@ -317,6 +316,8 @@ get.ref = function(sc,annotations,gene.list = NULL,dopar=T,ncores){
     close(pb)
     snow::stopCluster(cl)
     ref = t(apply(ref,1,function(x){x/cellcounts}))
+    colnames(ref) = cts
+    rownames(ref) = rownames(sc)
   }
   return(ref)
 }
