@@ -114,7 +114,9 @@ dim(st)
 ```{r}
 ## check the number cells in each cell type
 table(annotations[,2])
+```
 
+```{r,e}
 ## deconvolution
 # this may take a long time
 res = deconvoluting(sc,st,genemode="def",hpmode="def",dopar=T,ncores=8)
@@ -142,7 +144,7 @@ Like other methods, Redeconve can also perform deconvolution at cell-type level.
 ref = get.ref(sc,annotations,dopar = F)
 ```
 
-```{r}
+```{r,message=FALSE}
 ## deconvolution
 res.ct = deconvoluting(ref,st,genemode="def",hpmode="auto",dopar=T,ncores=8)
 ```
@@ -162,7 +164,7 @@ sc.ds = sc[,idx[,1]]
 
 This function returns a 2-columned matrix showing the barcodes and annotations of selected cells. The first parameter `ncells` is the original number of cells in scRNA dataset and the third `size` is the number of cells you want. The fourth parameter `prot` is to guarantee that at least one cell of each cell type in `annotations` is selected when set to `TRUE`.
 
-```{r}
+```{r,message=FALSE}
 res.ds = deconvoluting(sc.ds,st,genemode="def",hpmode="def",dopar=T,ncores=8)
 ```
 
