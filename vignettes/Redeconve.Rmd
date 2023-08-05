@@ -150,7 +150,7 @@ For the main function, every thing is the same except that we set `hpmode` as `"
 
 ### 2. Sampling
 
-Down-sampling is another way to deal with large scRNA datasets. Function `cell.sampling` is used to achieve this.
+Down-sampling is another way to deal with large scRNA datasets. Function `cell.sampling` is designed for this.
 
 ```{r}
 idx = cell.sampling(ncells = 500, annotations, size = 200, prot=T)
