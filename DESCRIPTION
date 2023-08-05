@@ -1,12 +1,12 @@
 Package: Redeconve
 Title: Deconvolution of spatial transcriptome with single cell
         resolution.
-Version: 1.0.0
+Version: 1.1.0
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Zixiang",
+           family = "Zhou",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
+           email = "zxclbnzhou@gmail.com",
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: Deconvolution of spatial transcriptome with single cell resolution.
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
@@ -23,11 +23,11 @@ Imports:
     quadprog,
     sampling,
     doSNOW,
-    reshape2,
-    ggrepel
+    reshape2
 Depends: 
     foreach,
     ggplot2,
+    ggrepel,
     igraph,
     R (>= 2.10),
     scatterpie
