@@ -75,8 +75,9 @@ cell.occur = function(nums){
 #' @export
 spatial.cell.number = function(nums,cell.names=NULL,coords,size=1,pdfout=T){
   nums = as.matrix(nums)
-  if(length(cell.names)!=0) nums = nums[cell.names,]
-  ncells = nrow(nums)
+  ncells = length(cell.names)
+  if(ncells!=0){nums = nums[cell.names,]}
+  else{ncells=nrow(nums)}
   plots = vector(mode = "list",length = ncells)
   cells = rownames(nums)
   for(i in 1:ncells){

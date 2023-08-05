@@ -2,7 +2,52 @@
 % Please edit documentation in R/fs.R
 \name{extract.seurat.sc}
 \alias{extract.seurat.sc}
-\title{Seurat interface 1}
+\title{#' Correction of single-cell expression profile.
+#'
+#' Use results and spatial transcriptomics to reversely estimate the spatial-specific expression profile.
+#'
+#' @param num One column of the results.
+#' @param st1 One column of Spatial transcriptomics data. The spot in which the expression profile is to correct.
+#' @param ref Reference.
+#' @param gene.list Genes to be estimated. Default is all.
+#' @param dopar Whether to use parallel computing.
+#'
+#' @export
+profile_correction = function(num, st1, ref, gene.list=NULL, dopar=T, ncores){
+num = as.matrix(num); st1 = as.matrix(st1); ref = as.matrix(ref)
+ref = ref + 0.5
+ref = apply(ref,2,function(x){x/sum(x)*1e06})
+cells = which(num!=0)
+if(length(gene.list)!=0){
+st1 = as.matrix(st1\link{gene.list,});ref = as.matrix(ref\link{gene.list,})
+}
+ref = as.matrix(ref\link{,cells}); num = as.matrix(num\link{cells})
+ngenes = dim(st1)\link{1}; ncells = dim(num)\link{1}
+if(dopar==T){
+cl = snow::makeCluster(ncores)
+doSNOW::registerDoSNOW(cl)
+pb = txtProgressBar(max = ngenes, style = 3)
+progress = function(n) setTxtProgressBar(pb, n)
+opts = list(progress = progress)
+ests = foreach::foreach(i=1:ngenes,.combine=rbind,.inorder=T,.packages = "quadprog",.export = "solveqp2",.options.snow = opts) \%dopar\% {
+est = solveqp2(st1\link{i,},num,ref\link{i,},ncells)
+return(est)
+}
+close(pb)
+snow::stopCluster(cl)
+rownames(ests) = rownames(ref)
+colnames(ests) = colnames(ref)
+}
+else{
+ests = matrix(nrow=ngenes,ncol=ncells)
+rownames(ests) = rownames(ref)
+colnames(ests) = colnames(ref)
+for(gene in gene.list){
+ests\link{gene,} = solveqp2(st1\link{gene,},num,ref\link{gene,},ncells)
+}
+}
+return(ests)
+}}
 \usage{
 extract.seurat.sc(sc_seu, anno_slot)
 }
@@ -15,5 +60,17 @@ extract.seurat.sc(sc_seu, anno_slot)
 A list, containing single-cell expression matrix and annotations.
 }
 \description{
+#' Solving QP in correcting expression profile
+solveqp2 = function(y,num,ref,ncells){
+G = diag(2,nrow=ncells,ncol=ncells)
+d = 2\emph{t(ref) # d^T = 2}ref
+a = num # a^T = num^T
+b = y
+result=quadprog::solve.QP(G,d,a,b)
+return(t(result[\link{"solution"}]))
+}
+Seurat interface 1
+}
+\details{
 Seurat interface for single-cell transcriptomics
 }

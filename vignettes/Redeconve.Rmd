@@ -103,6 +103,9 @@ Next we will use a demo to give an example of how to use this function.
 ## load the data
 data(basic)
 
+promises::promise_resolve(sc)
+promises::promise_resolve(st)
+
 ## check the dimensions of sc and st
 dim(sc)
 dim(st)
@@ -156,6 +159,7 @@ Down-sampling is another way to deal with large scRNA datasets. Function `cell.s
 idx = cell.sampling(ncells = 500, annotations, size = 200, prot=T)
 sc.ds = sc[,idx[,1]]
 ```
+
 This function returns a 2-columned matrix showing the barcodes and annotations of selected cells. The first parameter `ncells` is the original number of cells in scRNA dataset and the third `size` is the number of cells you want. The fourth parameter `prot` is to guarantee that at least one cell of each cell type in `annotations` is selected when set to `TRUE`.
 
 ```{r}
@@ -168,6 +172,7 @@ res.ds = deconvoluting(sc.ds,st,genemode="def",hpmode="def",dopar=T,ncores=8)
 ## Seurat interface
 
 This package provided two functions to extract information from Seurat object to satisfy Redeconve's input:
+
 ```{r}
 library(Seurat)
 library(SeuratData)
@@ -263,7 +268,7 @@ spot.pie(res[,"X27x18"],title="X27x18")
 
 ### Co-localization
 
-Function`coloc.network`infers a co-localization network from correlation of abundance of cells or cell types.
+Function `coloc.network`infers a co-localization network from correlation of abundance of cells or cell types.
 
 ```{r}
 corr = cor(t(res.ctmerge),method = "pearson")
