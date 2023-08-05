@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup, warning=FALSE}
-#library(Redeconve)
+library(Redeconve)
 ```
 
 ------------------------------------------------------------------------
@@ -29,7 +29,7 @@ This part describes how to use the main function `deconvoluting` to perform sing
 The usage of `deconvoluting` is as follows:
 
 ```{r}
-## nums = deconvoluting(ref, st, cellnames=NULL, genemode, gene.list, var_thresh=0.025, exp_thresh=0.03, hpmode, hp, aver_cell, thre=1e-10, dopar=T, ncores, realtime=F, dir=NULL)
+## nums = deconvoluting(ref, st, cellnames=NULL, genemode, gene.list, var_thresh=0.025, exp_thresh=0.03, hpmode, hp, normalize = T, thre=1e-10, dopar=T, ncores, realtime=F, dir=NULL)
 ```
 
 It does contains many parameters. Next, I will divide these parameters into several parts by function, and explain them one by one.
@@ -101,66 +101,93 @@ Next we will use a demo to give an example of how to use this function.
 
 ```{r}
 ## load the data
-#data(basic)
+data(basic)
 
 ## check the dimensions of sc and st
-#dim(sc)
-#dim(st)
+dim(sc)
+dim(st)
+```
 
+```{r}
 ## check the number cells in each cell type
-#table(annotations[,2])
+table(annotations[,2])
 
 ## deconvolution
 # this may take a long time
-#res = deconvoluting(sc,st,genemode="filt",hpmode="def",aver_cell=25,dopar=T,ncores=8)
+res = deconvoluting(sc,st,genemode="def",hpmode="def",dopar=T,ncores=8)
 ```
 
 -   `sc` and `st` are separately reference and spatial transcriptomics.
--   For there are about 20000 genes, `genemode` is set to `"filtered"` with the default threshold of variance and mean expression, which result in \#### genes.
+-   `genemode` is set to `"default"` to guarantee accuracy.
 -   `hpmode` is set to `"default"` to improve efficiency.
 -   `dopar` is set to `TRUE` (default value) and `ncores` is set to 8. You can raise the number of cores to improve efficiency.
--   This dataset is from the ST platform whose spot radius is about 100 $\mu$m, so we set `aver_cell` as 25.
 -   For this dataset is not very large, `realtime` is set to `FALSE` (default value).
 -   We want to use all cells in deconvolution, so we do not need to specify `cellnames`. Also, we do not need to adjust `thre`.
 
 ------------------------------------------------------------------------
 
-## Cell-type deconvolution
+## Dealing with large scRNA datasets
+
+Nowadays the scale of scRNA datasets are getting increasingly larger. Sometimes the reference cells can reach to sub-million or million level. Although Redeconve possesses high efficiency, directly using so much cells as reference is both time consuming and low yield. Here we provide two ways to deal with such situation:
+
+### 1. Cell-type deconvolution
 
 Like other methods, Redeconve can also perform deconvolution at cell-type level. This part shows how to do so.
 
 ```{r}
 ## get reference
-#ref = get.ref(sc,annotations)
-
-## deconvolution
-#res.ct = deconvoluting(sc,st,genemode="filt",hpmode="auto",dopar=T,ncores=8)
+ref = get.ref(sc,annotations,dopar = F)
 ```
 
-You can see that actually, only one more step is required to convert single-cell expression profile to that of cell type. The function `get.ref` will take the average expression of all cells in one cell type as the profile of that cell type.
+```{r}
+## deconvolution
+res.ct = deconvoluting(ref,st,genemode="def",hpmode="auto",dopar=T,ncores=8)
+```
 
-For the main function, every thing is the same. Here we set `hpmode` as `"autoselection"`, for there are only tens of cell types, then the speed is fast enough for us to run several rounds of deconvolution.
+You can see that actually, only one more step is required to convert single-cell expression profile to that of cell type. The function `get.ref` will take the average expression of all cells in one cell type as the profile of that cell type. Note that `get.ref` also has parameters `dopar` and `ncores`, with which you can perform parallel computing when the scale of `sc` is too large.
+
+For the main function, every thing is the same except that we set `hpmode` as `"autoselection"`, for there are only tens of cell types, then the speed is fast enough for us to run several rounds of deconvolution.
+
+### 2. Sampling
+
+Down-sampling is another way to deal with large scRNA datasets. Function `cell.sampling` is used to achieve this.
+
+```{r}
+idx = cell.sampling(ncells = 500, annotations, size = 200, prot=T)
+sc.ds = sc[,idx[,1]]
+```
+This function returns a 2-columned matrix showing the barcodes and annotations of selected cells. The first parameter `ncells` is the original number of cells in scRNA dataset and the third `size` is the number of cells you want. The fourth parameter `prot` is to guarantee that at least one cell of each cell type in `annotations` is selected when set to `TRUE`.
+
+```{r}
+res.ds = deconvoluting(sc.ds,st,genemode="def",hpmode="def",dopar=T,ncores=8)
+```
 
 ------------------------------------------------------------------------
 
-<!-- ## Dealing with large scRNA datasets -->
-
-<!-- Nowadays the scale of scRNA datasets are getting increasingly larger. Sometimes the reference cells can reach to sub-million or million level. Here we provide two ways to deal with this situation: -->
-
-<!-- 1. When proper annotations are available,  -->
 
 ## Seurat interface
 
 This package provided two functions to extract information from Seurat object to satisfy Redeconve's input:
 ```{r}
+library(Seurat)
+library(SeuratData)
+
+## installing data
+InstallData("pbmc3k")
+InstallData("stxBrain")
+```
+
+```{r}
 ## sc
-#sclist = extract.seurat.sc(pbmc3k,anno_slot="seurat_annotation")
+pbmc3k = UpdateSeuratObject(pbmc3k)
+sclist = extract.seurat.sc(pbmc3k,anno_slot="seurat_annotations")
 
 ## st
-#stlist = extract.seurat.st(stxBrain,coord_slot="anterior1")
+stxBrain = LoadData('stxBrain', type = 'anterior1')
+stlist = extract.seurat.st(stxBrain,coord_slot="anterior1")
 
 ## just for example
-#res = deconvoluting(sclist[["expr"]],stlist[["expr"],genemode="filt",hpmode="auto",dopar=T,ncores=8)
+# res = deconvoluting(sclist[["expr"]],stlist[["expr"],genemode="filt",hpmode="auto",dopar=T,ncores=8)
 ```
 
 ------------------------------------------------------------------------
@@ -169,26 +196,26 @@ This package provided two functions to extract information from Seurat object to
 
 Redeconve offers many built-in functions for downstream analysis and visualization.
 
-### gaining interpretability
+### Gaining interpretability
 
 For we included a normalization procedure, the result of `deconvoluting` has only relative significance. Here are some functions related:
 
 1.  `to.proportion`: This function converts the result to proportion, i.e., the sum of cell abundance per spot is 1. This is convenient for visualization.
 
 ```{r}
-#prop = to.proportion(nums)
+res.prop = to.proportion(res)
 ```
 
 2.  `to.absolute.abundance`: This function converts the result to absolute cell abundance with some priori knowledge. Parameter `aver.cell` is required to estimate the absolute abundance of each cell state. This value indicates the average number of cells in one spot. Users can determine it according to the platform of st data. For example, 10x Visium has a spot radius of about 50$\mu$m, so this value for a 10x Visium dataset is about 10.
 
 ```{r}
-#ab = to.absolute.abundance(nums,aver.cell=10)
+res.ab = to.absolute.abundance(res,aver.cell=10)
 ```
 
-3.  `sc2type`: This function converts single-cell result to cell-type result. Note that this function itself does not provide interpretability.
+3.  `sc2type`: This function merges single-cell result to cell-type result according to annotations. Note that this function itself does not provide interpretability.
 
 ```{r}
-#type_res = sc2type(res,annotations)
+res.ctmerge = sc2type(res,annotations)
 ```
 
 ### Cell occurrence
@@ -196,7 +223,7 @@ For we included a normalization procedure, the result of `deconvoluting` has onl
 The function `cell.occur` shows the number of cells actually used in deconvolution, and the number of spots that every used cell occurs.
 
 ```{r}
-#cell.occur(res)
+cell.occur(res)
 ```
 
 ### Find cells of interest
@@ -204,19 +231,18 @@ The function `cell.occur` shows the number of cells actually used in deconvoluti
 Redeconve offers a function to plot mean vs sd, and highlighting those outliers. Users can then explore those cells. Note that this function can only be run after `cell.occur`, because it needs `occurred.cells` as input, which is an output of `cell.occur`.
 
 ```{r}
-#show.cellsofinterest(res, occurred.cells)
+show.cellsofinterest(res, occurred.cells)
 ```
 
-### Abundance of all or some specific cells
+### Spatial distributiom of all or some specific cells
 
-The function `spatial.cell.number` can plot the abundance of all cells (or cell types) or some cells you indicate. Here we want to plot the abundance of three T cells, so we set `cellnames` as the names of cells we concern.
+The function `spatial.cell.number` can plot the abundance of all cells (or cell types) or some cells you indicate.
 
 ```{r}
-#Tcells = c("T.cells...NK.cells.8","T.cells...NK.cells.11","T.cells...NK.cells.35")
-#spatial.cell.number(res,cellnames=Tcells,coords=coords,name="Tcells.pdf")
+spatial.cell.number(res.ctmerge,cell.names="T cells & NK cells",coords=coords,size=4,pdfout=F)
 ```
 
-The output file, named "Tcells.pdf", can be found under current directory.
+Here we plotted the abundance of T cells & NK cells. When you want to plot the distribution of more than one cells, to set `pdfout` as `TRUE` is recommended.
 
 ### Spatial pie chart
 
@@ -224,8 +250,7 @@ The function `spatial.pie` can plot the spatial pie chart, showing the proportio
 
 ```{r}
 # For this is a demo, we use default colors
-# This may take some time
-#spatial.piechart(res.ctmerge,coords)
+spatial.piechart(res.ctmerge,coords)
 ```
 
 ### Spot pie chart
@@ -233,46 +258,48 @@ The function `spatial.pie` can plot the spatial pie chart, showing the proportio
 The function `spot.pie` can plot the proportion of each cell type within a certain spot.
 
 ```{r}
-#spot.pie(res[,"X27x18"],title="X27x18")
+spot.pie(res[,"X27x18"],title="X27x18")
 ```
 
 ### Co-localization
 
-Redeconve offers two main functions to explore co-localization. `coloc.corr` uses the correlation of cell abundance to infer co-localization, and `coloc.network` gains a network to visualize co-localization.
+Function`coloc.network`infers a co-localization network from correlation of abundance of cells or cell types.
 
 ```{r}
-# This function merges single cells to cell types
-#res.ctmerge = sc2type(res,annotations)
-
-#corr = coloc.corr(res.ctmerge,F,method="pearson")
-
-#celltypes = levels(as.factor(annotations[,2]))
-#g = coloc.network(corr,thre=0.4,cell.type=T,annotations=celltypes,ntypes=length(celltypes))
-#plot(g)
+corr = cor(t(res.ctmerge),method = "pearson")
+celltypes = levels(as.factor(annotations[,2]))
+g = coloc.network(corr,thresh=0.4,cell.type=T,annotations=celltypes,ntypes=length(celltypes))
 ```
 
-### Spatial expression visualization
+The parameter `thresh` means that only correlation coefficient larger than this value is regarded as an edge.
 
-The function `spatial.gene` can visualize gene expression across spatial coordinates. This can help validate the distribution of some cells/cell states.
 
 ```{r}
-#gene.list = c("CD3D","CD3E","CD3G")
-#spatial.gene(st,coords,gene.list)
+# plotting with igraph
+plot(g, vertex.size = 20, vertex.label.cex = 0.7, layout=layout_in_circle)
 ```
 
+<!-- ### Spatial expression profile visulization and imputation -->
 
-### Spatial expression profile imputation and reference correction
+<!-- Function `spatial.gene` is similar to `spatial.cell.number`, the difference is that this function plot the spatial expression of some genes. -->
 
-In spatial transcriptomics, drop-out is very severe. Meanwhile, the cell state of cells in spatial spot would not be exactly the same with that in reference. Here Redeconve offers a function that solves both problems. The function `profile.correction` can do impitation as well as profile correction for a single spot.
+<!-- ```{r} -->
+<!-- library(patchwork) -->
 
-```{r}
-#ests = profile_correction(res[,"X27x18"],st[,"X27x18"],sc,ncores=8)
-```
+<!-- p = spatial.gene(st,coords,gene.list = c("CD3D","CD3E","CD3G","CD8A"),pdf=F) -->
+<!-- p[[1]]+p[[2]]+p[[3]]+p[[4]]+plot_layout(ncol=2) -->
+<!-- ``` -->
 
-This is another quadratic programming problem: the goal is to let the corrected spatial expression higher than the observed (imputation). The return value is the "real" cell states in that spot after imputation.
+<!-- We can see that some CD8+ spots are not CD3+, which is unreasonable. This is because of spatial "drop-outs", in which some genes are not corrected detected.  -->
 
-We can use the function `profile_comparison` to see the difference between reference and corrected expression profile:
+<!-- Redeconve can reconstruct the spatial expression profile by the estimated absolute cell abundance and the single-cell expression profile, thus enabling imputation of the drop-outs. -->
 
-```{r}
-#profile_comparison(sc,ests)
-```
+<!-- ```{r} -->
+<!-- rec = profile.imputation(res.ab, sc) -->
+<!-- ## note that absolute cell abundance is required. -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- p_rec = spatial.gene(rec,coords,gene.list = c("CD3D","CD3E","CD3G","CD8A"),pdf=T) -->
+<!-- p_rec[[1]]+p_rec[[2]]+p_rec[[3]]+p_rec[[4]]+plot_layout(ncol=2) -->
+<!-- ``` -->

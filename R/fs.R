@@ -246,7 +246,7 @@ to.absolute.abundance = function(res,aver.cell){
 #'
 #' @export
 to.proportion = function(res){
-  res = apply(res,2,function(x){x/sum(x)})
+  res = apply(res,2,function(x){if(sum(x)!=0)x=x/sum(x);return(x)})
   return(res)
 }
 
@@ -531,4 +531,18 @@ extract.seurat.st = function(st_seu, coord_slot="image"){
   coords = eval(parse(text=paste0(substitute(st_seu),"@images$",coord_slot,"@coordinates")))
   st[["coords"]] = as.matrix(coords[,2:3])
   return(st)
+}
+
+#' Spatial expression profile imputation
+#'
+#' Reconstruct spatial expression profile by estimated (abosulte) cell abundance and single-cell expression profile.
+#'
+#' @param abnum The result of `to.absolute.abundance` !
+#' @param sc Single-cell expression profile.
+#'
+#' @return A matrix with dimensions same as `st`, the reconstructed expression profile.
+#'
+#' @export
+profile.imputation = function(abnum, sc){
+  return(sc %*% abnum)
 }

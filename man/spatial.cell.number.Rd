@@ -5,7 +5,7 @@
 \title{theme_bw(base_size = 15)+
 Plot of numbers for each given cell/cell type}
 \usage{
-spatial.cell.number(nums, cell.names = NULL, coords, size = 1, name)
+spatial.cell.number(nums, cell.names = NULL, coords, size = 1, pdfout = T)
 }
 \arguments{
 \item{nums}{Estimated cell numbers.}
@@ -17,8 +17,11 @@ and \code{colnames} should be "x" and "y".}
 
 \item{size}{Size of spot. Default is 1.}
 
-\item{name}{The name of this pdf file.}
+\item{pdfout}{Whether to draw the plot in a pdf file named "spatial_cell_number". When more than one cell is plotted, this is recommended to be \code{TRUE}.}
+}
+\value{
+A list containing the spatial distribution of each given cell.
 }
 \description{
-Plot of numbers for each cell cell/cell type.
+Plot of numbers for each given cell/cell type.
 }

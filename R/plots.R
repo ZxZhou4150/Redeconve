@@ -61,29 +61,35 @@ cell.occur = function(nums){
 
 #' Plot of numbers for each given cell/cell type
 #'
-#' Plot of numbers for each cell cell/cell type.
+#' Plot of numbers for each given cell/cell type.
 #'
 #' @param nums Estimated cell numbers.
 #' @param cell.names Name of cells (or cell types) to be plotted. Default is all.
 #' @param coords Coordinates of spatial spots. \code{rownames} should be the barcode(name) of each spot
 #' and \code{colnames} should be "x" and "y".
 #' @param size Size of spot. Default is 1.
-#' @param name The name of this pdf file.
+#' @param pdfout Whether to draw the plot in a pdf file named "spatial_cell_number". When more than one cell is plotted, this is recommended to be \code{TRUE}.
+#'
+#' @return A list containing the spatial distribution of each given cell.
 #'
 #' @export
-spatial.cell.number = function(nums,cell.names=NULL,coords,size=1,name){
+spatial.cell.number = function(nums,cell.names=NULL,coords,size=1,pdfout=T){
+  nums = as.matrix(nums)
   if(length(cell.names)!=0) nums = nums[cell.names,]
   ncells = nrow(nums)
   plots = vector(mode = "list",length = ncells)
   cells = rownames(nums)
   for(i in 1:ncells){
-    number = data.frame(nums[i,])
+    if(ncells==1){number = data.frame(nums)}
+    else{number = data.frame(nums[i,])}
     toplot = cbind.data.frame(coords,number)
     colnames(toplot) = c("x","y","number")
+    if(ncells==1){ttl=cell.names}
+    else{ttl=cells[i]}
     plots[[i]] = ggplot(toplot)+
       geom_point(aes(x=x,y=y,color=number),size=size)+
       scale_color_gradient(low="#F5F5F5",high="blue")+
-      labs(title = cells[i])+
+      labs(title = ttl)+
       theme_classic()+
       theme(axis.title.x = element_text(size=20),
             axis.title.y = element_text(size=20),
@@ -93,12 +99,15 @@ spatial.cell.number = function(nums,cell.names=NULL,coords,size=1,name){
             legend.title = element_text(size=12),
             legend.text = element_text(size=12))
   }
-  pdf(paste0(name,".pdf"),width=7,height=6)
-  invisible(lapply(plots, print))
-  dev.off()
+  if(pdfout==T){
+    pdf(paste0("spatial_cell_number.pdf"),width=7,height=6)
+    invisible(lapply(plots, print))
+    dev.off()
+  }
+  return(plots)
 }
 
-#' Spatial expression
+#' Spatial expression profile
 #'
 #' Visualization of spatial expression of some genes.
 #'
@@ -106,11 +115,13 @@ spatial.cell.number = function(nums,cell.names=NULL,coords,size=1,name){
 #' @param coords Coordinates of spatial spots.
 #' @param gene.list List of genes.
 #' @param size Size of spot. Default is 1.
+#' @param pdfout Whether to draw the plot in a pdf file named "spatial_gene". When more than one gene is plotted, this is recommended to be \code{TRUE}.
 #'
 #' @return A pdf file named "spatial_genes".
 #'
 #' @export
-spatial.gene = function(st,coords,gene.list,size=1){
+spatial.gene = function(st,coords,gene.list,size=1,pdfout=T){
+  nums = as.matrix(nums)
   if(sum(! gene.list %in% rownames(st))>0){
     warning("Some genes are not in st. Such genes are ignored.")
   }
@@ -133,9 +144,12 @@ spatial.gene = function(st,coords,gene.list,size=1){
             legend.title = element_text(size=12),
             legend.text = element_text(size=12))
   }
-  pdf("spatial_genes.pdf",width=7,height=6)
-  invisible(lapply(plots, print))
-  dev.off()
+  if(pdfout==T){
+    pdf("spatial_genes.pdf",width=7,height=6)
+    invisible(lapply(plots, print))
+    dev.off()
+  }
+  return(plots)
 }
 
 #' Colocalization network
@@ -160,7 +174,6 @@ coloc.network=function(corr,thresh,cell.type,annotations,ntypes,color=NULL){
   else(V(g)$annotations = annotations)
   if(length(color)==0)color = grDevices::rainbow(ntypes)
   V(g)$color = color[factor(V(g)$annotations)]
-  deg = degree(g,mode = "all")
   return(g)
 }
 
@@ -194,53 +207,53 @@ spatial.piechart=function(nums,coords,colors=NULL,title=NULL){
                      guides(fill=guide_legend(title="Cell Type"))
 }
 
-#' Corrected profile v.s. original profile
-#'
-#' Comparison of the corrected and original profile.
-#'
-#' @param ref Original reference.
-#' @param ests Corrected expression profile.
-#' @param barcodes (Optional) the barcodes of the cells whose profile is to compared. Default is all.
-#'
-#' @return A pdf file named "profile_comparison".
-#'
-#' @export
-profile_comparison = function(ref,ests,barcodes=NULL){
-  ref = ref+0.5
-  ref = apply(ref,2,function(x){x/sum(x)*1e06})
-  ref = ref[rownames(ests),colnames(ests)]
-  if(is.null(barcodes)){
-    barcodes=colnames(ests)
-  }
-  ncells = length(barcodes)
-  plots = vector(mode = "list",length = ncells)
-  for(i in 1:ncells){
-    geneslabel = correctedgenes(ref[,i],ests[,i])
-    toplot = cbind.data.frame(log10(ref[,i]),log10(ests[,i]),rownames(ests))
-    colnames(toplot) = c("x","y","genes")
-    plots[[i]] = ggplot()+
-      geom_point(data=toplot,aes(x=x,y=y,alpha=0.8))+
-      ggrepel::geom_text_repel(data=toplot[geneslabel,],aes(x=x,y=y,
-                                                   label=genes,
-                          fontface="italic"),size=3)+
-      labs(x="origninal",y="corrected",title=barcodes[i])+
-      geom_abline(slope = 1,intercept=0,linetype="dashed",color="red")+
-      theme_classic()
-  }
-  pdf("profile_comparison.pdf")
-  invisible(lapply(plots, print))
-  dev.off()
-}
+#' #' Corrected profile v.s. original profile
+#' #'
+#' #' Comparison of the corrected and original profile.
+#' #'
+#' #' @param ref Original reference.
+#' #' @param ests Corrected expression profile.
+#' #' @param barcodes (Optional) the barcodes of the cells whose profile is to compared. Default is all.
+#' #'
+#' #' @return A pdf file named "profile_comparison".
+#' #'
+#' #' @export
+#' profile_comparison = function(ref,ests,barcodes=NULL){
+#'   ref = ref+0.5
+#'   ref = apply(ref,2,function(x){x/sum(x)*1e06})
+#'   ref = ref[rownames(ests),colnames(ests)]
+#'   if(is.null(barcodes)){
+#'     barcodes=colnames(ests)
+#'   }
+#'   ncells = length(barcodes)
+#'   plots = vector(mode = "list",length = ncells)
+#'   for(i in 1:ncells){
+#'     geneslabel = correctedgenes(ref[,i],ests[,i])
+#'     toplot = cbind.data.frame(log10(ref[,i]),log10(ests[,i]),rownames(ests))
+#'     colnames(toplot) = c("x","y","genes")
+#'     plots[[i]] = ggplot()+
+#'       geom_point(data=toplot,aes(x=x,y=y,alpha=0.8))+
+#'       ggrepel::geom_text_repel(data=toplot[geneslabel,],aes(x=x,y=y,
+#'                                                    label=genes,
+#'                           fontface="italic"),size=3)+
+#'       labs(x="origninal",y="corrected",title=barcodes[i])+
+#'       geom_abline(slope = 1,intercept=0,linetype="dashed",color="red")+
+#'       theme_classic()
+#'   }
+#'   pdf("profile_comparison.pdf")
+#'   invisible(lapply(plots, print))
+#'   dev.off()
+#' }
 
 #
-correctedgenes = function(ref1,est1,top=20,thresh=50){
-  diff = est1-ref1
-  ord = order(diff,decreasing = T)
-  tops = ord[1:top]
-  totake = tops[which(tops>thresh)]
-  if(length(totake)==0)totake =tops[which(tops>0)]
-  return(totake)
-}
+# correctedgenes = function(ref1,est1,top=20,thresh=50){
+#   diff = est1-ref1
+#   ord = order(diff,decreasing = T)
+#   tops = ord[1:top]
+#   totake = tops[which(tops>thresh)]
+#   if(length(totake)==0)totake =tops[which(tops>0)]
+#   return(totake)
+# }
 
 
 #' Pie chart of a single spot
