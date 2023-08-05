@@ -64,7 +64,7 @@ The hyperparamter is our key to single-cell resolution (See Methods for details)
 
 3.  `autoselection`: Redeconve will use a procedure to select the optimal hyperparameter. In this procedure, a series of hyperparameter will be set in the vicinity of the hyperparameter selected by mode `default`, and Redeconve will use these hyperparameters to perform deconvolution separately, then return the result with the best hyperparameter. You can see Methods for details about how we determine the best hyperparameter.
 
--   Note that in this procedure, several rounds of deconvolution will be performed, so it may take a long time. Under such circumstances, parallel computing will be beneficial.
+Note that in this procedure, several rounds of deconvolution will be performed, so it may take a long time. Under such circumstances, parallel computing will be beneficial.
 
 ### 4. Parallel computing
 
@@ -82,7 +82,7 @@ Sometimes the reference will contain tens of thousands of cells, or the spatial 
 
 Even with parallel computing, some dataset is still time-consuming. Redeconve is able to write results into disk in real time at the cost of some running speed. Related parameters are `realtime` and `dir`.
 
--   `dopar` determines whethers to write the results into disk in real time or not.
+-   `realtime` determines whethers to write the results into disk in real time or not.
 -   `dir` indicates the directory to write the results.
 
 For real time results, the result of each spot will be write into a separate csv file, whose name is the barcode of the spot.
