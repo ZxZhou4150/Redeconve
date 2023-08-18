@@ -122,7 +122,6 @@ spatial.cell.number = function(nums,cell.names=NULL,coords,size=1,pdfout=T){
 #'
 #' @export
 spatial.gene = function(st,coords,gene.list,size=1,pdfout=T){
-  nums = as.matrix(nums)
   if(sum(! gene.list %in% rownames(st))>0){
     warning("Some genes are not in st. Such genes are ignored.")
   }
