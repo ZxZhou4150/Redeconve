@@ -335,3 +335,39 @@ show.cellsofinterest = function(nums,occurred.cells,outliernum=10){
   print(occurred.cells[tolabel])
   return(p)
 }
+
+#' DEG dotplot, adapt from seurat
+#'
+#' @export
+deg.dotplot = function(sc,annotations,genelist){
+  rownames(annotations)=annotations[,1]
+  annotations = annotations[colnames(sc),]
+  types = as.factor(annotations[,2])
+  ntype = nlevels(types)
+  ngene = length(genelist)
+  sc.gl = sc[genelist,]
+  meanexp = get.ref(sc.gl,annotations,dopar=F)
+  frac = meanexp
+  for(type in colnames(frac)){
+    cells = which(annotations[,2]==type)
+    ncells = length(cells)
+    for(gene in rownames(frac)){
+      frac[gene,type]=sum(sc.gl[gene,cells]!=0)/ncells
+    }
+  }
+  x = rep(as.character(levels(types)),each=ngene)
+  y = rep(genelist,ntype)
+  me = matrix(meanexp,ncol=1)
+  fr = matrix(frac,ncol=1)
+  toplot = cbind.data.frame(x,y,me,fr)
+  ggplot(toplot)+
+    geom_point(aes(x=x,y=y,size=fr,color=me))+
+    scale_color_gradient(low="#F5F5F5",high="blue")+
+    labs(color="Mean expression",
+         size="Fraction of cells")+
+    theme_minimal()+
+    theme(axis.title.x = element_blank(),
+          axis.title.y = element_blank(),
+          axis.text.x = element_text(vjust=0.7,size=8,angle=30,face="bold"),
+          axis.text.y = element_text(face="bold"))
+}

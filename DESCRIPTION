@@ -19,11 +19,11 @@ Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
 Imports: 
     Matrix,
-    Hmisc,
     quadprog,
     sampling,
     doSNOW,
-    reshape2
+    reshape2,
+    HiClimR
 Depends: 
     foreach,
     ggplot2,

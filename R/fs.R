@@ -65,7 +65,7 @@ deconvoluting = function(ref, st, cellnames=NULL, genemode, gene.list, var_thres
     ref = apply(ref,2,function(x){x/sum(x)*1e06})
   }
   print("Calculating correlation matrix ...")
-  r = Hmisc::rcorr(ref)[["r"]]
+  r = suppressMessages(HiClimR::fastCor(ref, nSplit = 100, upperTri = F,verbose=F))
   r[r<0] = 0
 
   hpmode = match.arg(hpmode, c("default","customized","autoselection"))
