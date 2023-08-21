@@ -31,4 +31,4 @@ browseVignettes("Redeconve")
 ---------------------
 ### Manual
 
-If you didn't build the vignette, you can refer [**here**](Redeconve manual.ipynb) for jupyter notebook and [**here**](https://zxzhou4150.github.io/Redeconve%20manual.html) for the rendered html page. 
+If you didn't build the vignette, you can refer [**here**](Redeconve manual.ipynb) for jupyter notebook and [**<u>here</u>**](https://zxzhou4150.github.io/Redeconve%20manual.html) for the rendered html page. 
