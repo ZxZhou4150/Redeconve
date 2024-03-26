@@ -2,44 +2,7 @@
 % Please edit documentation in R/plots.R
 \name{spot.pie}
 \alias{spot.pie}
-\title{#' Corrected profile v.s. original profile
-#'
-#' Comparison of the corrected and original profile.
-#'
-#' @param ref Original reference.
-#' @param ests Corrected expression profile.
-#' @param barcodes (Optional) the barcodes of the cells whose profile is to compared. Default is all.
-#'
-#' @return A pdf file named "profile_comparison".
-#'
-#' @export
-profile_comparison = function(ref,ests,barcodes=NULL){
-ref = ref+0.5
-ref = apply(ref,2,function(x){x/sum(x)*1e06})
-ref = ref\link{rownames(ests),colnames(ests)}
-if(is.null(barcodes)){
-barcodes=colnames(ests)
-}
-ncells = length(barcodes)
-plots = vector(mode = "list",length = ncells)
-for(i in 1:ncells){
-geneslabel = correctedgenes(ref\link{,i},ests\link{,i})
-toplot = cbind.data.frame(log10(ref\link{,i}),log10(ests\link{,i}),rownames(ests))
-colnames(toplot) = c("x","y","genes")
-plots[\link{i}] = ggplot()+
-geom_point(data=toplot,aes(x=x,y=y,alpha=0.8))+
-ggrepel::geom_text_repel(data=toplot\link{geneslabel,},aes(x=x,y=y,
-label=genes,
-fontface="italic"),size=3)+
-labs(x="origninal",y="corrected",title=barcodes\link{i})+
-geom_abline(slope = 1,intercept=0,linetype="dashed",color="red")+
-theme_classic()
-}
-pdf("profile_comparison.pdf")
-invisible(lapply(plots, print))
-dev.off()
-}
-Pie chart of a single spot}
+\title{Pie chart of a single spot}
 \usage{
 spot.pie(num, colors = NULL, title)
 }

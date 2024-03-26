@@ -2,8 +2,7 @@
 % Please edit documentation in R/plots.R
 \name{spatial.cell.number}
 \alias{spatial.cell.number}
-\title{theme_bw(base_size = 15)+
-Plot of numbers for each given cell/cell type}
+\title{Plot of numbers for each given cell/cell type}
 \usage{
 spatial.cell.number(nums, cell.names = NULL, coords, size = 1, pdfout = T)
 }
