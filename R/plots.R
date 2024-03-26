@@ -189,7 +189,7 @@ coloc.network=function(corr,thresh,cell.type,annotations,ntypes,color=NULL){
 #' @return An "igraph" object of the subgraph. Also, this function will plot the subgraph with the chosen node in the center.
 #'
 #' @export
-extract_subgraph = function(g, vertex_of_interest, ...){
+extract.subgraph = function(g, vertex_of_interest, ...){
   subg <- induced_subgraph(g, c(names(neighbors(g, vertex_of_interest)), vertex_of_interest))
   
   # setting the layout
