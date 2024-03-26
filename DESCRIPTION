@@ -1,7 +1,7 @@
 Package: Redeconve
 Title: Deconvolution of spatial transcriptome with single cell
         resolution.
-Version: 1.1.0
+Version: 1.1.1
 Authors@R: 
     person(given = "Zixiang",
            family = "Zhou",
