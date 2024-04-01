@@ -2,15 +2,19 @@
 Deconvolution of spatial transcriptomics at single-cell resolution.
 
 
-* This package is still under development. Now the basic functions are complete and we will include more functions and optimization in the future.
-* To see codes analyzing the paper, please refer to https://codeocean.com/capsule/5481250/tree (not published yet).
+* This package is still under development. Now the basic functions are complete and we will include more functions and refinement in the future.
+* To see codes analyzing the paper, please refer to https://codeocean.com/capsule/1351962/tree/v1.
 
 
 
 
 ---------------------
 ### History
+08/21/2023: The first official version (v1.1.0) of Redeconve is released on Github.
 
+12/01/2023: The article was published in the journal nature communications (https://www.nature.com/articles/s41467-023-43600-9).
+
+04/01/2024: Version v1.1.1 is released with minor bugfixes and new functions about co-localization.
 
 
 ---------------------
