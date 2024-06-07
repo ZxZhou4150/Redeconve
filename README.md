@@ -16,6 +16,8 @@ Deconvolution of spatial transcriptomics at single-cell resolution.
 
 04/01/2024: Version v1.1.1 is released with minor bugfixes and new functions about co-localization.
 
+06/07/2024: Version v1.1.2 is released. In this version, all non-R codes are deleted, making this package no longer needs compilation.
+
 
 ---------------------
 ### Installation
@@ -26,10 +28,19 @@ devtools::install_github("ZxZhou4150/Redeconve", build_vignettes = F)
 ```
 You may also set `build_vignettes` as `T`, but it may take some time to build the vignette (tens of minutes). 
 
+
 ```{r}
 browseVignettes("Redeconve")
 ```
 
+
+<font color=Red>**Note on 06/07/2024**:</font>
+Setting `build_vignettes` as `T` may encounter this error: 
+```
+Error in graph.adjacency.dense(adjmatrix, mode = mode, weighted = weighted, :
+At vendor/cigraph/src/constructors/adjacency.c:535 : Adjacency matrix should be symmetric to produce an undirected graph. Invalid value
+```
+This is not solved yet (actually the passed adjacency matrix IS symmetric). So please don't build the vignette at this time. See the next section for a rendered manual.
 
 
 ---------------------
