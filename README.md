@@ -34,7 +34,7 @@ browseVignettes("Redeconve")
 ```
 
 
-<font color=Red>**Note on 06/07/2024**:</font>
+<font color=Red>**!Note on 06/07/2024!**</font>
 Setting `build_vignettes` as `T` may encounter this error: 
 ```
 Error in graph.adjacency.dense(adjmatrix, mode = mode, weighted = weighted, :
