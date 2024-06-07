@@ -227,6 +227,8 @@ sc2type = function(nums,annotations){
 #'
 #' @return A cell-by-spot matrix, each place is the estimated absolute abundance of the cell in the spot.
 #'
+#' @seealso [to.proportion()]
+#'
 #' @export
 to.absolute.abundance = function(res,aver.cell){
   nspots = ncol(res)
@@ -243,6 +245,8 @@ to.absolute.abundance = function(res,aver.cell){
 #' @param res Result of `deconvoluting`.
 #'
 #' @return A cell-by-spot matrix, with the sum of each column equaling to 1.
+#' 
+#' @seealso [to.absolute.number()]
 #'
 #' @export
 to.proportion = function(res){
