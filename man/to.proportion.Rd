@@ -15,3 +15,6 @@ A cell-by-spot matrix, with the sum of each column equaling to 1.
 \description{
 One way of gaining interpretability, normalize results to proportion
 }
+\seealso{
+\code{\link[=to.absolute.number]{to.absolute.number()}}
+}

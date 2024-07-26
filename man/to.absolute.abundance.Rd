@@ -17,3 +17,6 @@ A cell-by-spot matrix, each place is the estimated absolute abundance of the cel
 \description{
 One way of gaining interpretability, estimating absolute abundance
 }
+\seealso{
+\code{\link[=to.proportion]{to.proportion()}}
+}
