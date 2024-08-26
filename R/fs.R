@@ -30,7 +30,7 @@
 #' @return A matrix, showing the number of estimated absolute abundance of each cell(cell type) in each spot.
 #'
 #' @export
-deconvoluting = function(ref, st, cellnames=NULL, genemode, gene.list, var_thresh=0.025, exp_thresh=0.03, hpmode, hp, normalize=T, thre=1e-10, dopar=T, ncores, realtime=F, dir=NULL){
+deconvoluting = function(ref, st, cellnames=NULL, genemode, gene.list, var_thresh=0.025, exp_thresh=0.003, hpmode, hp, normalize=T, thre=1e-10, dopar=T, ncores, realtime=F, dir=NULL){
   if((dopar==T) & (missing(ncores))){stop("Parameter \"ncores\" is required to avoid latent errors.")}
   ref = as.matrix(ref); st = as.matrix(st)
   if(!is.null(cellnames)){
