@@ -504,36 +504,41 @@ cell.sampling=function(ncells,annotations = NULL,size,prot = T){
 
 #' Seurat interface 1
 #' 
-#' Seurat interface for single-cell transcriptomics
+#' Seurat interface for single-cell transcriptomics. This function will extract the expression matrix and annotations (as "Idents") from the Seurat object.
 #' 
 #' @param sc_seu Seurat object of single-cell transcriptomics
-#' @param anno_slot Character, name of slot storing annotations information, under "meta.data" slot.
 #' 
 #' @return A list, containing single-cell expression matrix and annotations.
 #' 
+#' @seealso [extract.seurat.st()]
+#' 
 #' @export
-extract.seurat.sc = function(sc_seu, anno_slot){
+extract.seurat.sc = function(sc_seu){
   sc = list()
   sc[["expr"]] = sc_seu@assays$RNA@counts
-  sc[["annotations"]] = eval(parse(text=paste0(substitute(sc_seu),"$",anno_slot)))
+  idents = Seurat::Idents(sc_seu)
+  sc[["annotations"]] = cbind(names(idents),as.character(idents))
   return(sc)
 }
 
 #' Seurat interface 2
 #'
-#' Seurat interface for spatial transcriptomics
+#' Seurat interface for spatial transcriptomics. This function will extract the expression matrix and spatial coordinates from the Seurat object.
 #'
-#' @param sc_seu Seurat object of spatial transcriptomics
-#' @param coord_slot Character, name of slot storing annotations information, under "image" slot. Default is "image".
+#' @param st_seu Seurat object of spatial transcriptomics
+#' @param ... Additional parameters for `Seurat::GetTissueCoordinates`
 #'
 #' @return A list, containing single-cell expression matrix and annotations.
+#' 
+#' @seealso [extract.seurat.sc()]
 #'
 #' @export
-extract.seurat.st = function(st_seu, coord_slot="image"){
+extract.seurat.st = function(st_seu, ...){
   st = list()
   st[["expr"]] = st_seu@assays$Spatial@counts
-  coords = eval(parse(text=paste0(substitute(st_seu),"@images$",coord_slot,"@coordinates")))
-  st[["coords"]] = as.matrix(coords[,2:3])
+  coords = Seurat::GetTissueCoordinates(object = st_seu, ...)
+  colnames(coords) = c("x","y")
+  st[['coords']] = coords
   return(st)
 }
 

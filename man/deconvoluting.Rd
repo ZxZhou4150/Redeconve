@@ -11,7 +11,7 @@ deconvoluting(
   genemode,
   gene.list,
   var_thresh = 0.025,
-  exp_thresh = 0.03,
+  exp_thresh = 0.003,
   hpmode,
   hp,
   normalize = T,

@@ -7497,7 +7497,7 @@ a.anchor-link {
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=a661e34a">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=a661e34a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7507,6 +7507,42 @@ a.anchor-link {
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-r"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">Redeconve</span><span class="p">)</span>
 </pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
+<pre>Loading required package: foreach
+
+Loading required package: ggplot2
+
+Loading required package: ggrepel
+
+Loading required package: igraph
+
+
+Attaching package: 'igraph'
+
+
+The following objects are masked from 'package:stats':
+
+    decompose, spectrum
+
+
+The following object is masked from 'package:base':
+
+    union
+
+
+Loading required package: scatterpie
+
+</pre>
 </div>
 </div>
 </div>
@@ -8206,6 +8242,10 @@ Ductal - CRISP3 high/centroacinar like                  Ductal - MHC Class II
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p>This package provided two functions to extract information from Seurat object to satisfy Redeconve's input:</p>
+<ul>
+<li><code>extract.seurat.sc</code> extracts expression and annotations (with <code>Seurat::Idents</code>) to a list. When using this function, make sure you have set the desired ident to "active".</li>
+<li><code>extract.seurat.sc</code> extracts expression and spot coordinates (with <code>Seurat::GetTissueCoordinates</code>) to a list.</li>
+</ul>
 </div>
 </div>
 </div>
@@ -8227,14 +8267,15 @@ Ductal - CRISP3 high/centroacinar like                  Ductal - MHC Class II
 
 <span class="c1">## sc</span>
 <span class="n">pbmc3k</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">UpdateSeuratObject</span><span class="p">(</span><span class="n">pbmc3k</span><span class="p">)</span>
-<span class="n">sclist</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">extract.seurat.sc</span><span class="p">(</span><span class="n">pbmc3k</span><span class="p">,</span><span class="w"> </span><span class="n">anno_slot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"seurat_annotations"</span><span class="p">)</span>
+<span class="n">sclist</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">extract.seurat.sc</span><span class="p">(</span><span class="n">pbmc3k</span><span class="p">)</span>
 
 <span class="c1">## st</span>
 <span class="n">stxBrain</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">LoadData</span><span class="p">(</span><span class="s">"stxBrain"</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"anterior1"</span><span class="p">)</span>
-<span class="n">stlist</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">extract.seurat.st</span><span class="p">(</span><span class="n">stxBrain</span><span class="p">,</span><span class="w"> </span><span class="n">coord_slot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"anterior1"</span><span class="p">)</span>
+<span class="n">stlist</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">extract.seurat.st</span><span class="p">(</span><span class="n">stxBrain</span><span class="p">)</span>
 
 <span class="c1">## just for example</span>
-<span class="c1"># res = deconvoluting(sclist[["expr"]],stlist[["expr"],genemode="filt",hpmode="auto",dopar=T,ncores=8)</span>
+<span class="c1"># ref = get.ref(sclist[["expr"]],sclist[["annotations"]],dopar=F)</span>
+<span class="c1"># res = deconvoluting(ref,stlist[["expr"],genemode="filt",hpmode="auto",dopar=T,ncores=8)</span>
 </pre></div>
 </div>
 </div>
@@ -8247,12 +8288,72 @@ Ductal - CRISP3 high/centroacinar like                  Ductal - MHC Class II
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Validating object structure
+<pre>Loading required package: SeuratObject
+
+Loading required package: sp
+
+Loading required package: sp
+
+
+Attaching package: 'sp'
+
+
+The following object is masked from 'package:scatterpie':
+
+    recenter
+
+
+'SeuratObject' was built under R 4.3.3 but the current version is
+4.4.1; it is recomended that you reinstall 'SeuratObject' as the ABI
+for R may have changed
+
+'SeuratObject' was built with package 'Matrix' 1.6.5 but the current
+version is 1.7.0; it is recomended that you reinstall 'SeuratObject' as
+the ABI for 'Matrix' may have changed
+
+
+Attaching package: 'SeuratObject'
+
+
+The following objects are masked from 'package:base':
+
+    %||%, intersect, t
+
+
+
+Attaching package: 'Seurat'
+
+
+The following object is masked from 'package:igraph':
+
+    components
+
+
+The following object is masked from 'package:base':
+
+    %||%
+
+
+── <span class="ansi-bold">Installed datasets</span> ──────────────────────────────── SeuratData v0.2.2.9001 ──
+
+<span class="ansi-green-fg">✔</span> <span class="ansi-blue-fg">pbmc3k  </span> 3.1.4                        <span class="ansi-green-fg">✔</span> <span class="ansi-blue-fg">stxBrain</span> 0.1.1
+
+
+────────────────────────────────────── Key ─────────────────────────────────────
+
+<span class="ansi-green-fg">✔</span> Dataset loaded successfully
+<span class="ansi-yellow-fg">❯</span> Dataset built with a newer version of Seurat than installed
+<span class="ansi-red-fg">❓</span> Unknown version of Seurat installed
+
+
+Validating object structure
 
 Updating object slots
 
 Ensuring keys are in the proper structure
 
+Warning message:
+"Assay RNA changing from Assay to Assay"
 Ensuring keys are in the proper structure
 
 Ensuring feature names don't have underscores or pipes

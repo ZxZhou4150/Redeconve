@@ -4,16 +4,17 @@
 \alias{extract.seurat.sc}
 \title{Seurat interface 1}
 \usage{
-extract.seurat.sc(sc_seu, anno_slot)
+extract.seurat.sc(sc_seu)
 }
 \arguments{
 \item{sc_seu}{Seurat object of single-cell transcriptomics}
-
-\item{anno_slot}{Character, name of slot storing annotations information, under "meta.data" slot.}
 }
 \value{
 A list, containing single-cell expression matrix and annotations.
 }
 \description{
-Seurat interface for single-cell transcriptomics
+Seurat interface for single-cell transcriptomics. This function will extract the expression matrix and annotations (as "Idents") from the Seurat object.
+}
+\seealso{
+\code{\link[=extract.seurat.st]{extract.seurat.st()}}
 }

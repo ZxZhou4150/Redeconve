@@ -4,16 +4,19 @@
 \alias{extract.seurat.st}
 \title{Seurat interface 2}
 \usage{
-extract.seurat.st(st_seu, coord_slot = "image")
+extract.seurat.st(st_seu, ...)
 }
 \arguments{
-\item{coord_slot}{Character, name of slot storing annotations information, under "image" slot. Default is "image".}
+\item{st_seu}{Seurat object of spatial transcriptomics}
 
-\item{sc_seu}{Seurat object of spatial transcriptomics}
+\item{...}{Additional parameters for \code{Seurat::GetTissueCoordinates}}
 }
 \value{
 A list, containing single-cell expression matrix and annotations.
 }
 \description{
-Seurat interface for spatial transcriptomics
+Seurat interface for spatial transcriptomics. This function will extract the expression matrix and spatial coordinates from the Seurat object.
+}
+\seealso{
+\code{\link[=extract.seurat.sc]{extract.seurat.sc()}}
 }
