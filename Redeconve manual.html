@@ -8493,7 +8493,7 @@ Object representation is consistent with the most current Seurat version
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>4.1.3  <code>sc2type</code>: This function merges single-cell result to cell-type result according to annotations. Note that this function itself does not provide interpretability.</p>
+<p>4.1.3  <code>sc2type</code>: This function merges single-cell result to cell-type result according to annotations. If you used <code>get.ref</code> and got the cell-type level result as <code>res.ct</code>, then there is no need to use this function. Note that this function itself does not provide interpretability.</p>
 </div>
 </div>
 </div>
@@ -8506,6 +8506,9 @@ Object representation is consistent with the most current Seurat version
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-r"><pre><span></span><span class="n">res.ctmerge</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">sc2type</span><span class="p">(</span><span class="n">res</span><span class="p">,</span><span class="w"> </span><span class="n">annotations</span><span class="p">)</span>
+
+<span class="c1">## If you have downsampled the data:</span>
+<span class="c1"># res.ctmerge = sc2type(res.ds,annotations = annotations[idx,])</span>
 </pre></div>
 </div>
 </div>
