@@ -29,7 +29,7 @@ This part describes how to use the main function `deconvoluting` to perform sing
 The usage of `deconvoluting` is as follows:
 
 ```{r}
-## nums = deconvoluting(ref, st, cellnames=NULL, genemode, gene.list, var_thresh=0.025, exp_thresh=0.03, hpmode, hp, normalize = T, thre=1e-10, dopar=T, ncores, realtime=F, dir=NULL)
+## nums = deconvoluting(ref, st, cellnames=NULL, genemode, gene.list, var_thresh=0.025, exp_thresh=0.003, hpmode, hp, normalize = T, thre=1e-10, dopar=T, ncores, realtime=F, dir=NULL)
 ```
 
 It does contains many parameters. Next, I will divide these parameters into several parts by function, and explain them one by one.
