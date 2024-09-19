@@ -4,7 +4,15 @@
 \alias{spatial.gene}
 \title{Spatial expression profile}
 \usage{
-spatial.gene(st, coords, gene.list, size = 1, pdfout = T)
+spatial.gene(
+  st,
+  coords,
+  gene.list,
+  size = 1,
+  img.backgound = F,
+  img,
+  pdfout = T
+)
 }
 \arguments{
 \item{st}{Spatial transcriptomics.}
@@ -15,7 +23,11 @@ spatial.gene(st, coords, gene.list, size = 1, pdfout = T)
 
 \item{size}{Size of spot. Default is 1.}
 
+\item{img}{Image to be used as background.}
+
 \item{pdfout}{Whether to draw the plot in a pdf file named "spatial_gene". When more than one gene is plotted, this is recommended to be \code{TRUE}.}
+
+\item{img.background}{Whether to use an image as background. Default is \code{FALSE}.}
 }
 \value{
 A pdf file named "spatial_genes".

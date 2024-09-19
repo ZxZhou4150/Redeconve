@@ -4,7 +4,14 @@
 \alias{spatial.piechart}
 \title{This is the CARD function}
 \usage{
-spatial.piechart(nums, coords, colors = NULL, title = NULL)
+spatial.piechart(
+  nums,
+  coords,
+  colors = NULL,
+  img.backgound = F,
+  img,
+  title = NULL
+)
 }
 \description{
 This is the CARD function

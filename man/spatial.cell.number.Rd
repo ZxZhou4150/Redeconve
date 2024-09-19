@@ -4,7 +4,15 @@
 \alias{spatial.cell.number}
 \title{Plot of numbers for each given cell/cell type}
 \usage{
-spatial.cell.number(nums, cell.names = NULL, coords, size = 1, pdfout = T)
+spatial.cell.number(
+  nums,
+  cell.names = NULL,
+  coords,
+  size = 1,
+  img.background = F,
+  img,
+  pdfout = T
+)
 }
 \arguments{
 \item{nums}{Estimated cell numbers.}
@@ -15,6 +23,10 @@ spatial.cell.number(nums, cell.names = NULL, coords, size = 1, pdfout = T)
 and \code{colnames} should be "x" and "y".}
 
 \item{size}{Size of spot. Default is 1.}
+
+\item{img.background}{Whether to use an image as background. Default is \code{FALSE}.}
+
+\item{img}{Image to be used as background.}
 
 \item{pdfout}{Whether to draw the plot in a pdf file named "spatial_cell_number". When more than one cell is plotted, this is recommended to be \code{TRUE}.}
 }

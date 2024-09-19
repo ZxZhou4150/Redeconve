@@ -68,12 +68,14 @@ cell.occur = function(nums){
 #' @param coords Coordinates of spatial spots. \code{rownames} should be the barcode(name) of each spot
 #' and \code{colnames} should be "x" and "y".
 #' @param size Size of spot. Default is 1.
+#' @param img.background Whether to use an image as background. Default is \code{FALSE}.
+#' @param img Image to be used as background.
 #' @param pdfout Whether to draw the plot in a pdf file named "spatial_cell_number". When more than one cell is plotted, this is recommended to be \code{TRUE}.
 #'
 #' @return A list containing the spatial distribution of each given cell.
 #'
 #' @export
-spatial.cell.number = function(nums,cell.names=NULL,coords,size=1,pdfout=T){
+spatial.cell.number = function(nums,cell.names=NULL,coords,size=1,img.background = F, img, pdfout=T){
   nums = as.matrix(nums)
   ncells = length(cell.names)
   if(ncells!=0){nums = nums[cell.names,]}
@@ -87,7 +89,7 @@ spatial.cell.number = function(nums,cell.names=NULL,coords,size=1,pdfout=T){
     colnames(toplot) = c("x","y","number")
     if(ncells==1){ttl=cell.names}
     else{ttl=cells[i]}
-    plots[[i]] = ggplot(toplot)+
+    p = ggplot(toplot)+
       geom_point(aes(x=x,y=y,color=number),size=size)+
       scale_color_gradient(low="#F5F5F5",high="blue")+
       labs(title = ttl)+
@@ -99,6 +101,10 @@ spatial.cell.number = function(nums,cell.names=NULL,coords,size=1,pdfout=T){
             title = element_text(size=20),
             legend.title = element_text(size=12),
             legend.text = element_text(size=12))
+    if(img.background==T){
+      p = p + annotation_custom(grob = rasterGrob(img), xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf)
+    }
+    plots[[i]] = p
   }
   if(pdfout==T){
     pdf(paste0("spatial_cell_number.pdf"),width=7,height=6)
@@ -116,12 +122,14 @@ spatial.cell.number = function(nums,cell.names=NULL,coords,size=1,pdfout=T){
 #' @param coords Coordinates of spatial spots.
 #' @param gene.list List of genes.
 #' @param size Size of spot. Default is 1.
+#' @param img.background Whether to use an image as background. Default is \code{FALSE}.
+#' @param img Image to be used as background.
 #' @param pdfout Whether to draw the plot in a pdf file named "spatial_gene". When more than one gene is plotted, this is recommended to be \code{TRUE}.
 #'
 #' @return A pdf file named "spatial_genes".
 #'
 #' @export
-spatial.gene = function(st,coords,gene.list,size=1,pdfout=T){
+spatial.gene = function(st,coords,gene.list,size=1,img.backgound = F, img, pdfout=T){
   if(sum(! gene.list %in% rownames(st))>0){
     warning("Some genes are not in st. Such genes are ignored.")
   }
@@ -131,7 +139,7 @@ spatial.gene = function(st,coords,gene.list,size=1,pdfout=T){
   for(i in 1:ngenes){
     toplot = cbind.data.frame(coords,st[genelist[i],])
     colnames(toplot) = c("x","y","expression")
-    plots[[i]] = ggplot(toplot)+
+    p = ggplot(toplot)+
       geom_point(aes(x=x,y=y,color=expression),size=size)+
       scale_color_gradient(low="#F5F5F5",high="blue")+
       labs(title = genelist[i])+
@@ -143,6 +151,10 @@ spatial.gene = function(st,coords,gene.list,size=1,pdfout=T){
             title = element_text(size=20),
             legend.title = element_text(size=12),
             legend.text = element_text(size=12))
+    if(img.background==T){
+      p = p + annotation_custom(grob = rasterGrob(img), xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf)
+    }
+    plots[[i]] = p
   }
   if(pdfout==T){
     pdf("spatial_genes.pdf",width=7,height=6)
@@ -232,14 +244,14 @@ extract.subgraph = function(g, vertex_of_interest, ...){
 
 #' This is the CARD function
 #' @export
-spatial.piechart=function(nums,coords,colors=NULL,title=NULL){
+spatial.piechart=function(nums,coords,colors=NULL,img.backgound = F, img, title=NULL){
   ntnums = apply(nums,2,function(x){if(sum(x)!=0)x=x/sum(x);return(x)})
   data = cbind.data.frame(t(ntnums),coords)
   ntypes = nrow(ntnums)
   if(length(colors)==0) colors = grDevices::rainbow(ntypes)
   ct.select = rownames(ntnums)
   occurred = which(apply(ntnums,1,sum)!=0)
-  ggplot() +
+  p = ggplot() +
     geom_scatterpie(aes(x=x, y=y,r = 0.52),data=data,
                                               cols=ct.select,color=NA) + coord_fixed(ratio = 1) +
                      scale_fill_manual(values = colors[occurred])+
@@ -258,6 +270,10 @@ spatial.piechart=function(nums,coords,colors=NULL,title=NULL){
                            strip.text = element_text(size = 12,face="bold"),
                            legend.position="bottom")+
                      guides(fill=guide_legend(title="Cell Type"))
+  if(img.backgound){
+    p = p + annotation_custom(grob = rasterGrob(img), xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf)
+  }
+  return(p)
 }
 
 # #' Corrected profile v.s. original profile
