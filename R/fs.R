@@ -254,76 +254,42 @@ to.proportion = function(res){
   return(res)
 }
 
-#' Getting the gene expression profile of each cell type.
+#' Optimized calculation of gene expression profile per cell type
 #'
-#' If you want to use the gene expression profile of each cell type as reference,
-#' this function can calculate the average expression of genes within all cells
-#' of every cell type.
-#'
-#' @param sc Raw scRNA-seq data. Note that colnames of sc must be cell barcodes.
-#' @param annotations A \code{data.frame} with 2 columns: the first column should be barcodes,
-#' the second column should be the corresponding cell type.
-#' @param gene.list (optional) Genes to be calculated. If missing, all genes
-#' will be calculated.
-#'
-#' @return A matrix showing the gene expression profile of each cell type,
-#' one row represents one cell type and one column represents one gene.
-#'
-#' @export
-get.ref = function(sc,annotations,gene.list = NULL,dopar=T,ncores){
-  barcodes=colnames(sc)
-  shared=intersect(barcodes,annotations[,1])
-  ncells=length(barcodes)
-  if(length(shared)<ncells){
-    stop("There are cells missing annotation.")
+#' @param sc A matrix or dgCMatrix. Rows are genes, columns are cell barcodes.
+#' @param annotations A data.frame with 2 columns: [1] barcodes, [2] cell type labels.
+#' @param gene.list (optional) Character vector of genes to include.
+#' 
+#' @return A matrix (genes x cell types) of mean expression values.
+get.ref <- function(sc, annotations, gene.list = NULL) {
+  common_cells <- intersect(colnames(sc), annotations[, 1])
+  if (length(common_cells) == 0) stop("No matching barcodes found between sc and annotations.")
+  
+  sc <- sc[, common_cells, drop = FALSE]
+  annotations <- annotations[match(common_cells, annotations[, 1]), ]
+  
+  if (!is.null(gene.list)) {
+    gene.list <- intersect(gene.list, rownames(sc))
+    sc <- sc[gene.list, , drop = FALSE]
   }
-  sc = as(sc,"dgCMatrix")
-  if(!is.null(gene.list))sc = sc[gene.list,]
-  ngenes=nrow(sc)
-  if(dopar==F){
-    ords = order(annotations[,2])
-    annotation = annotations[ords,2]
-    tab = table(annotation)
-    sc = sc[,ords]
-    ntypes=length(tab)
-    ref=matrix(nrow=ngenes,ncol=ntypes)
-    rownames(ref)=rownames(sc)
-    colnames(ref)=dimnames(tab)[[1]]
-    begin=1
-    for(i in 1:ntypes){
-      if(tab[i]==1)ref[,i]=sc[,begin]
-      else{
-        end = begin+tab[i]-1
-        names(end) = NULL
-        ref[,i] = apply(sc[,begin:end],1,mean)
-      }
-      begin = end+1
-    }
+  
+  # Ensure sc is a sparse matrix for memory efficiency
+  if (!inherits(sc, "dgCMatrix")) {
+    sc <- as(sc, "dgCMatrix")
   }
-  else{
-    if(missing(ncores))stop("Parameter \"ncores\" is required to avoid latent errors.")
-    cts = levels(as.factor(annotations[,2]))
-    ntypes = length(cts)
-    cl = snow::makeCluster(ncores)
-    doSNOW::registerDoSNOW(cl)
-    print("Getting cell type expression profile ...")
-    pb = txtProgressBar(max = ncells, style = 3)
-    progress = function(n) setTxtProgressBar(pb, n)
-    opts = list(progress = progress)
-    cellcounts = as.matrix(table(annotations[,2]))
-    ref = foreach::foreach(i=1:ncells,.combine="+",.inorder=F,.options.snow = opts,.packages = "Matrix") %dopar% {
-      ref = matrix(data=0,nrow=ngenes,ncol=ntypes)
-      ct = which(cts==annotations[i,2])
-      ref[,ct] = ref[,ct] + sc[,i]
-      return(ref)
-    }
-    close(pb)
-    snow::stopCluster(cl)
-    ref = t(apply(ref,1,function(x){x/cellcounts}))
-    colnames(ref) = cts
-    rownames(ref) = rownames(sc)
-  }
-  return(ref)
+  
+  groups <- as.factor(annotations[, 2])
+  
+  group_matrix <- sparse.model.matrix(~ 0 + groups)
+  colnames(group_matrix) <- levels(groups)
+  
+  sum_matrix <- sc %*% group_matrix
+  
+  cell_counts <- as.numeric(table(groups))
+  
+  ref <- t(t(sum_matrix) / cell_counts)
+  
+  return(as.matrix(ref))
 }
 
 #' Getting differentially expressed genes
